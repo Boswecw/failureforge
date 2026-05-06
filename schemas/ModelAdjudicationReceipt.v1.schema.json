@@ -1,0 +1,81 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ModelAdjudicationReceipt.v1",
+  "description": "Immutable receipt for one NeuroForge provider/model verdict against a RootCauseCluster. The receipt preserves the model vote while deterministic cluster evidence remains the final classification source.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "adjudication_receipt_id",
+    "job_id",
+    "cluster_id",
+    "target_repo",
+    "provider_name",
+    "model_id",
+    "proposed_classification",
+    "proposed_severity",
+    "confidence",
+    "agrees_with_cluster_classification",
+    "agrees_with_cluster_severity",
+    "rationale",
+    "evidence_receipts",
+    "deterministic_inputs",
+    "created_at",
+    "adjudication_hash"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {"type": "string", "const": "ModelAdjudicationReceipt.v1"},
+    "adjudication_receipt_id": {"type": "string", "pattern": "^MAR-[A-Za-z0-9_\\-]+$"},
+    "job_id": {"type": "string", "pattern": "^NFJ-[A-Za-z0-9_\\-]+$"},
+    "cluster_id": {"type": "string", "pattern": "^RC-[A-Za-z0-9_\\-]+$"},
+    "target_repo": {"type": "string", "minLength": 1, "maxLength": 256},
+    "provider_name": {"type": "string", "minLength": 1, "maxLength": 128},
+    "model_id": {"type": "string", "minLength": 1, "maxLength": 128},
+    "proposed_classification": {
+      "type": "string",
+      "enum": [
+        "state_failure",
+        "duplicate_replay",
+        "missing_field",
+        "unknown_enum",
+        "bad_path",
+        "bad_unicode",
+        "malformed_input",
+        "boundary",
+        "no_failure_observed"
+      ]
+    },
+    "proposed_severity": {"type": "string", "enum": ["critical", "high", "medium", "low", "info"]},
+    "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+    "agrees_with_cluster_classification": {"type": "boolean"},
+    "agrees_with_cluster_severity": {"type": "boolean"},
+    "rationale": {"type": "string", "minLength": 1, "maxLength": 4096},
+    "evidence_receipts": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"type": "string", "pattern": "^FHR-[A-Za-z0-9_\\-]+$"}
+    },
+    "deterministic_inputs": {
+      "type": "object",
+      "required": [
+        "cluster_classification",
+        "cluster_dominant_severity",
+        "cluster_fingerprint",
+        "cluster_member_count",
+        "cluster_ready_for_gate",
+        "provider_result_hash"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "cluster_classification": {"type": "string"},
+        "cluster_dominant_severity": {"type": "string"},
+        "cluster_fingerprint": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "cluster_member_count": {"type": "integer", "minimum": 1},
+        "cluster_ready_for_gate": {"type": "boolean"},
+        "provider_result_hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    },
+    "created_at": {"type": "string", "format": "date-time"},
+    "adjudication_hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

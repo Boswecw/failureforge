@@ -92,3 +92,11 @@ def validate_root_cause_cluster(doc: dict[str, Any]) -> None:
 
 def validate_fix_cluster_report(doc: dict[str, Any]) -> None:
     _validate("FixClusterReport.v1.schema.json", doc)
+
+
+def validate_model_adjudication_receipt(doc: dict[str, Any]) -> None:
+    _validate("ModelAdjudicationReceipt.v1.schema.json", doc)
+
+
+def validate_neuroforge_adjudication_report(doc: dict[str, Any]) -> None:
+    _validate("NeuroForgeAdjudicationReport.v1.schema.json", doc)

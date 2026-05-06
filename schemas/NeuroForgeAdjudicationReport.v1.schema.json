@@ -1,0 +1,93 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "NeuroForgeAdjudicationReport.v1",
+  "description": "Provider-comparison job result for one RootCauseCluster. Provider votes are preserved as model adjudication receipts, while final classification is derived from deterministic cluster evidence.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "job_id",
+    "target_repo",
+    "cluster_id",
+    "cluster_fingerprint",
+    "provider_count",
+    "provider_consensus_classification",
+    "provider_consensus_severity",
+    "final_classification",
+    "final_severity",
+    "adjudication_status",
+    "operator_review_required",
+    "deterministic_rule",
+    "model_receipts",
+    "summary",
+    "created_at"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {"type": "string", "const": "NeuroForgeAdjudicationReport.v1"},
+    "job_id": {"type": "string", "pattern": "^NFJ-[A-Za-z0-9_\\-]+$"},
+    "target_repo": {"type": "string", "minLength": 1, "maxLength": 256},
+    "cluster_id": {"type": "string", "pattern": "^RC-[A-Za-z0-9_\\-]+$"},
+    "cluster_fingerprint": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "provider_count": {"type": "integer", "minimum": 2},
+    "provider_consensus_classification": {
+      "type": "string",
+      "enum": [
+        "state_failure",
+        "duplicate_replay",
+        "missing_field",
+        "unknown_enum",
+        "bad_path",
+        "bad_unicode",
+        "malformed_input",
+        "boundary",
+        "no_failure_observed",
+        "no_consensus"
+      ]
+    },
+    "provider_consensus_severity": {
+      "type": "string",
+      "enum": ["critical", "high", "medium", "low", "info", "no_consensus"]
+    },
+    "final_classification": {
+      "type": "string",
+      "enum": [
+        "state_failure",
+        "duplicate_replay",
+        "missing_field",
+        "unknown_enum",
+        "bad_path",
+        "bad_unicode",
+        "malformed_input",
+        "boundary",
+        "no_failure_observed"
+      ]
+    },
+    "final_severity": {"type": "string", "enum": ["critical", "high", "medium", "low", "info"]},
+    "adjudication_status": {
+      "type": "string",
+      "enum": ["confirmed", "provider_disagreement", "cluster_disputed"]
+    },
+    "operator_review_required": {"type": "boolean"},
+    "deterministic_rule": {"type": "string", "minLength": 1, "maxLength": 256},
+    "model_receipts": {
+      "type": "array",
+      "minItems": 2,
+      "items": {"$ref": "ModelAdjudicationReceipt.v1.schema.json"}
+    },
+    "summary": {
+      "type": "object",
+      "required": [
+        "cluster_classification_confirmed",
+        "provider_disagreement_count",
+        "cluster_disputed_by_provider_consensus"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "cluster_classification_confirmed": {"type": "boolean"},
+        "provider_disagreement_count": {"type": "integer", "minimum": 0},
+        "cluster_disputed_by_provider_consensus": {"type": "boolean"}
+      }
+    },
+    "created_at": {"type": "string", "format": "date-time"}
+  }
+}

@@ -8,6 +8,8 @@ from failureforge.validation.schemas import (
     validate_promotion_candidate,
     validate_root_cause_cluster,
     validate_fix_cluster_report,
+    validate_model_adjudication_receipt,
+    validate_neuroforge_adjudication_report,
 )
 from failureforge.validation.hashing import (
     compute_receipt_hash,
@@ -22,6 +24,10 @@ from failureforge.validation.hashing import (
     apply_candidate_hash,
     verify_candidate_hash,
     CandidateHashMismatch,
+    compute_model_adjudication_hash,
+    apply_model_adjudication_hash,
+    verify_model_adjudication_hash,
+    ModelAdjudicationHashMismatch,
 )
 
 __all__ = [
@@ -34,6 +40,8 @@ __all__ = [
     "validate_promotion_candidate",
     "validate_root_cause_cluster",
     "validate_fix_cluster_report",
+    "validate_model_adjudication_receipt",
+    "validate_neuroforge_adjudication_report",
     "compute_receipt_hash",
     "apply_receipt_hash",
     "verify_receipt_hash",
@@ -46,4 +54,8 @@ __all__ = [
     "apply_candidate_hash",
     "verify_candidate_hash",
     "CandidateHashMismatch",
+    "compute_model_adjudication_hash",
+    "apply_model_adjudication_hash",
+    "verify_model_adjudication_hash",
+    "ModelAdjudicationHashMismatch",
 ]

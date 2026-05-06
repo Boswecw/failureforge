@@ -118,3 +118,34 @@ def verify_candidate_hash(candidate: dict[str, Any]) -> None:
         raise CandidateHashMismatch(
             f"candidate_hash mismatch: stored={stored} computed={expected}"
         )
+
+
+# ---- ModelAdjudicationReceipt -----------------------------------------
+
+
+class ModelAdjudicationHashMismatch(Exception):
+    """Raised when a model adjudication receipt's stored hash does not match."""
+
+
+def compute_model_adjudication_hash(receipt: dict[str, Any]) -> str:
+    payload = {k: v for k, v in receipt.items() if k != "adjudication_hash"}
+    return hashlib.sha256(_canonical(payload)).hexdigest()
+
+
+def apply_model_adjudication_hash(receipt: dict[str, Any]) -> dict[str, Any]:
+    body = dict(receipt)
+    body["adjudication_hash"] = compute_model_adjudication_hash(body)
+    return body
+
+
+def verify_model_adjudication_hash(receipt: dict[str, Any]) -> None:
+    stored = receipt.get("adjudication_hash")
+    if not stored:
+        raise ModelAdjudicationHashMismatch(
+            "model adjudication receipt has no adjudication_hash field"
+        )
+    expected = compute_model_adjudication_hash(receipt)
+    if stored != expected:
+        raise ModelAdjudicationHashMismatch(
+            f"adjudication_hash mismatch: stored={stored} computed={expected}"
+        )
