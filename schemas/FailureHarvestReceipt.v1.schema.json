@@ -1,0 +1,86 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "FailureHarvestReceipt.v1",
+  "description": "Durable evidence that an attack ran and produced a result. Immutable after write — the receipt_hash field commits to the rest of the document.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "receipt_id",
+    "failure_case_id",
+    "sandbox_run_id",
+    "target_repo",
+    "target_ref",
+    "classification",
+    "severity",
+    "expected_result",
+    "actual_result",
+    "reproducible",
+    "repro_command",
+    "artifact_paths",
+    "promotion_status",
+    "created_at"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {"type": "string", "const": "FailureHarvestReceipt.v1"},
+    "receipt_id": {"type": "string", "pattern": "^FHR-[A-Za-z0-9_\\-]+$"},
+    "failure_case_id": {"type": "string", "pattern": "^FC-[A-Za-z0-9_\\-]+$"},
+    "sandbox_run_id": {"type": "string", "pattern": "^SR-[A-Za-z0-9_\\-]+$"},
+    "target_repo": {"type": "string", "minLength": 1, "maxLength": 256},
+    "target_ref": {"type": "string", "minLength": 1, "maxLength": 256},
+    "classification": {
+      "type": "string",
+      "enum": [
+        "state_failure",
+        "duplicate_replay",
+        "missing_field",
+        "unknown_enum",
+        "bad_path",
+        "bad_unicode",
+        "malformed_input",
+        "boundary",
+        "no_failure_observed"
+      ]
+    },
+    "severity": {"type": "string", "enum": ["critical", "high", "medium", "low", "info"]},
+    "expected_result": {"type": "string", "minLength": 1, "maxLength": 4096},
+    "actual_result": {"type": "string", "minLength": 1, "maxLength": 4096},
+    "reproducible": {"type": "boolean"},
+    "repro_command": {"type": "string", "minLength": 1, "maxLength": 1024},
+    "artifact_paths": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1, "maxLength": 1024}
+    },
+    "promotion_status": {
+      "type": "string",
+      "enum": [
+        "pending_operator_review",
+        "rejected_by_operator",
+        "approved_for_test_generation",
+        "approved_for_patch_advice",
+        "approved_for_smith_review",
+        "promoted_to_regression_gate",
+        "closed_by_fix",
+        "superseded"
+      ]
+    },
+    "created_at": {"type": "string", "format": "date-time"},
+    "agent_lane": {
+      "type": "string",
+      "enum": [
+        "edge_case",
+        "chaos",
+        "mutation",
+        "reproduction",
+        "classification",
+        "gate",
+        "patch_advisor",
+        "receipt"
+      ]
+    },
+    "stdout_excerpt": {"type": "string", "maxLength": 8192},
+    "stderr_excerpt": {"type": "string", "maxLength": 8192},
+    "exit_code": {"type": ["integer", "null"]},
+    "receipt_hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

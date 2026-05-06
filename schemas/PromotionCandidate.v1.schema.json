@@ -1,0 +1,48 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "PromotionCandidate.v1",
+  "description": "An operator-authorized package handed across the SMITH boundary. FailureForge does NOT mutate canonical repos — SMITH owns that authority. The candidate carries the proposed test/patch/gate payload and the SMITH-side handoff state.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "promotion_candidate_id",
+    "failure_receipt_id",
+    "approval_receipt_id",
+    "target_repo",
+    "candidate_kind",
+    "candidate_payload",
+    "smith_handoff_status",
+    "created_at"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {"type": "string", "const": "PromotionCandidate.v1"},
+    "promotion_candidate_id": {"type": "string", "pattern": "^PC-[A-Za-z0-9_\\-]+$"},
+    "failure_receipt_id": {"type": "string", "pattern": "^FHR-[A-Za-z0-9_\\-]+$"},
+    "approval_receipt_id": {"type": "string", "pattern": "^AR-[A-Za-z0-9_\\-]+$"},
+    "target_repo": {"type": "string", "minLength": 1, "maxLength": 256},
+    "candidate_kind": {
+      "type": "string",
+      "enum": ["regression_test", "patch_advice", "gate"]
+    },
+    "candidate_payload": {"type": "object"},
+    "candidate_hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "smith_handoff_status": {
+      "type": "string",
+      "enum": [
+        "pending_smith_pickup",
+        "picked_up_by_smith",
+        "accepted_by_smith",
+        "rejected_by_smith",
+        "withdrawn_by_operator"
+      ]
+    },
+    "smith_decision_reason": {"type": "string", "maxLength": 4096},
+    "smith_decided_at": {"type": ["string", "null"], "format": "date-time"},
+    "smith_decided_by": {"type": "string", "maxLength": 256},
+    "created_at": {"type": "string", "format": "date-time"},
+    "withdrawn_at": {"type": ["string", "null"], "format": "date-time"},
+    "withdrawn_by": {"type": "string", "maxLength": 256},
+    "withdrawn_reason": {"type": "string", "maxLength": 4096}
+  }
+}

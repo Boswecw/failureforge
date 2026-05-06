@@ -1,0 +1,25 @@
+{
+  "actual_result": "registry rejected as expected: ValueError('unknown kind: not_an_allowed_kind')",
+  "agent_lane": "edge_case",
+  "artifact_paths": [
+    "sandbox/runs/SR-a63546096e/stdout.log",
+    "sandbox/runs/SR-a63546096e/stderr.log"
+  ],
+  "classification": "no_failure_observed",
+  "created_at": "2026-05-05T01:50:07.261232Z",
+  "exit_code": 0,
+  "expected_result": "ValueError or rejection.",
+  "failure_case_id": "FC-0003",
+  "promotion_status": "pending_operator_review",
+  "receipt_hash": "4b847e483b4eec9e19da107122318b9f2a90d6225ee607c60a62b311981c719c",
+  "receipt_id": "FHR-07f6c8b4b6",
+  "repro_command": "./scripts/replay_failure.sh sandbox/receipts/FHR-07f6c8b4b6.json",
+  "reproducible": true,
+  "sandbox_run_id": "SR-a63546096e",
+  "schema_version": "FailureHarvestReceipt.v1",
+  "severity": "info",
+  "stderr_excerpt": "",
+  "stdout_excerpt": "",
+  "target_ref": "demo",
+  "target_repo": "example-repo"
+}

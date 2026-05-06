@@ -1,0 +1,37 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "FixClusterReport.v1",
+  "description": "A morning-friendly report ranking RootCauseClusters by severity + agreement. Operators read this to pick the highest-leverage clusters to fix first.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "report_id",
+    "target_repo",
+    "generated_at",
+    "clusters",
+    "summary"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {"type": "string", "const": "FixClusterReport.v1"},
+    "report_id": {"type": "string", "pattern": "^FCR-[A-Za-z0-9_\\-]+$"},
+    "target_repo": {"type": "string", "minLength": 1, "maxLength": 256},
+    "generated_at": {"type": "string", "format": "date-time"},
+    "clusters": {
+      "type": "array",
+      "items": {"$ref": "RootCauseCluster.v1.schema.json"}
+    },
+    "summary": {
+      "type": "object",
+      "required": ["total_clusters", "open_clusters", "ready_for_gate_clusters"],
+      "additionalProperties": false,
+      "properties": {
+        "total_clusters": {"type": "integer", "minimum": 0},
+        "open_clusters": {"type": "integer", "minimum": 0},
+        "ready_for_gate_clusters": {"type": "integer", "minimum": 0},
+        "top_severity": {"type": "string", "maxLength": 32},
+        "top_recommended_fix": {"type": "string", "maxLength": 4096}
+      }
+    }
+  }
+}

@@ -1,0 +1,86 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "RootCauseCluster.v1",
+  "description": "A deduplicated grouping of FailureHarvestReceipts that share a root cause. Preserves source disagreement across lanes (severity_distribution, actual_result_distribution) rather than collapsing it.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "cluster_id",
+    "target_repo",
+    "classification",
+    "attack_family",
+    "invariant",
+    "cluster_fingerprint",
+    "member_receipts",
+    "member_count",
+    "lanes",
+    "lane_agreement",
+    "dominant_severity",
+    "severity_distribution",
+    "actual_result_distribution",
+    "first_seen_at",
+    "last_seen_at",
+    "status",
+    "representative_recommended_fix"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {"type": "string", "const": "RootCauseCluster.v1"},
+    "cluster_id": {"type": "string", "pattern": "^RC-[A-Za-z0-9_\\-]+$"},
+    "target_repo": {"type": "string", "minLength": 1, "maxLength": 256},
+    "classification": {
+      "type": "string",
+      "enum": [
+        "state_failure",
+        "duplicate_replay",
+        "missing_field",
+        "unknown_enum",
+        "bad_path",
+        "bad_unicode",
+        "malformed_input",
+        "boundary",
+        "no_failure_observed"
+      ]
+    },
+    "attack_family": {"type": "string", "minLength": 1, "maxLength": 128},
+    "invariant": {"type": "string", "minLength": 1, "maxLength": 4096},
+    "cluster_fingerprint": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "root_cause_label": {"type": "string", "maxLength": 128},
+    "member_receipts": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"type": "string", "pattern": "^FHR-[A-Za-z0-9_\\-]+$"}
+    },
+    "member_count": {"type": "integer", "minimum": 1},
+    "lanes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "enum": [
+          "edge_case", "chaos", "mutation", "reproduction",
+          "classification", "gate", "patch_advisor", "receipt"
+        ]
+      }
+    },
+    "lane_agreement": {"type": "integer", "minimum": 1},
+    "dominant_severity": {"type": "string", "enum": ["critical", "high", "medium", "low", "info"]},
+    "severity_distribution": {
+      "type": "object",
+      "additionalProperties": {"type": "integer", "minimum": 0}
+    },
+    "actual_result_distribution": {
+      "type": "object",
+      "additionalProperties": {"type": "integer", "minimum": 0}
+    },
+    "reproducible_count": {"type": "integer", "minimum": 0},
+    "first_seen_at": {"type": "string", "format": "date-time"},
+    "last_seen_at": {"type": "string", "format": "date-time"},
+    "status": {
+      "type": "string",
+      "enum": ["open", "closed_by_fix", "superseded"]
+    },
+    "representative_recommended_fix": {"type": "string", "minLength": 1, "maxLength": 4096},
+    "ready_for_gate": {"type": "boolean"}
+  }
+}

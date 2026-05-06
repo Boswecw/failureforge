@@ -1,0 +1,56 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "FailureCase.v1",
+  "description": "A planned or generated attack case.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "failure_case_id",
+    "target_repo",
+    "target_area",
+    "invariant",
+    "attack_type",
+    "attack_description",
+    "expected_result",
+    "agent_lane",
+    "created_at"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {"type": "string", "const": "FailureCase.v1"},
+    "failure_case_id": {"type": "string", "pattern": "^FC-[A-Za-z0-9_\\-]+$"},
+    "target_repo": {"type": "string", "minLength": 1, "maxLength": 256},
+    "target_area": {"type": "string", "minLength": 1, "maxLength": 256},
+    "invariant": {"type": "string", "minLength": 1, "maxLength": 4096},
+    "attack_type": {
+      "type": "string",
+      "enum": [
+        "state_failure",
+        "duplicate_replay",
+        "missing_field",
+        "unknown_enum",
+        "bad_path",
+        "bad_unicode",
+        "malformed_input",
+        "boundary"
+      ]
+    },
+    "attack_description": {"type": "string", "minLength": 1, "maxLength": 4096},
+    "expected_result": {"type": "string", "minLength": 1, "maxLength": 4096},
+    "agent_lane": {
+      "type": "string",
+      "enum": [
+        "edge_case",
+        "chaos",
+        "mutation",
+        "reproduction",
+        "classification",
+        "gate",
+        "patch_advisor",
+        "receipt"
+      ]
+    },
+    "created_at": {"type": "string", "format": "date-time"},
+    "attack_input": {"type": ["object", "string", "null"]}
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "HardeningReport.v1",
+  "description": "Ranked morning output for a sandbox run.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "report_id",
+    "sandbox_run_id",
+    "target_repo",
+    "summary",
+    "ranked_findings",
+    "created_at"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {"type": "string", "const": "HardeningReport.v1"},
+    "report_id": {"type": "string", "pattern": "^HR-[A-Za-z0-9_\\-]+$"},
+    "sandbox_run_id": {"type": "string", "pattern": "^SR-[A-Za-z0-9_\\-]+$"},
+    "target_repo": {"type": "string", "minLength": 1, "maxLength": 256},
+    "summary": {"type": "string", "minLength": 1, "maxLength": 4096},
+    "ranked_findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "rank",
+          "failure_id",
+          "classification",
+          "severity",
+          "reproducibility",
+          "blast_radius",
+          "frequency",
+          "fix_complexity",
+          "score",
+          "recommended_fix",
+          "receipts",
+          "repro_command",
+          "ready_for_gate"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "rank": {"type": "integer", "minimum": 1},
+          "failure_id": {"type": "string", "minLength": 1, "maxLength": 256},
+          "classification": {"type": "string", "minLength": 1, "maxLength": 256},
+          "severity": {"type": "string", "enum": ["critical", "high", "medium", "low", "info"]},
+          "reproducibility": {"type": "string", "enum": ["reproducible", "intermittent", "non_reproducible"]},
+          "blast_radius": {"type": "string", "enum": ["repo", "service", "subsystem", "ecosystem", "unknown"]},
+          "frequency": {"type": "integer", "minimum": 1},
+          "fix_complexity": {"type": "string", "enum": ["trivial", "small", "medium", "large", "unknown"]},
+          "score": {"type": "number"},
+          "recommended_fix": {"type": "string", "minLength": 1, "maxLength": 4096},
+          "receipts": {"type": "array", "items": {"type": "string", "pattern": "^FHR-[A-Za-z0-9_\\-]+$"}, "minItems": 1},
+          "repro_command": {"type": "string", "minLength": 1, "maxLength": 1024},
+          "ready_for_gate": {"type": "boolean"},
+          "lanes": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "edge_case", "chaos", "mutation", "reproduction",
+                "classification", "gate", "patch_advisor", "receipt"
+              ]
+            },
+            "minItems": 1
+          },
+          "lane_agreement": {"type": "integer", "minimum": 1}
+        }
+      }
+    },
+    "created_at": {"type": "string", "format": "date-time"},
+    "receipts_total": {"type": "integer", "minimum": 0},
+    "reproducible_total": {"type": "integer", "minimum": 0}
+  }
+}

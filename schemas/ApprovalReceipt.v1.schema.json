@@ -1,0 +1,59 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ApprovalReceipt.v1",
+  "description": "Immutable record of an operator decision on a FailureHarvestReceipt. Authorizes (or refuses) a transition through the promotion-status FSM and, for approval kinds, authorizes the creation of a PromotionCandidate.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "approval_receipt_id",
+    "failure_receipt_id",
+    "decided_by",
+    "decided_at",
+    "decision",
+    "prior_promotion_status",
+    "new_promotion_status"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {"type": "string", "const": "ApprovalReceipt.v1"},
+    "approval_receipt_id": {"type": "string", "pattern": "^AR-[A-Za-z0-9_\\-]+$"},
+    "failure_receipt_id": {"type": "string", "pattern": "^FHR-[A-Za-z0-9_\\-]+$"},
+    "decided_by": {"type": "string", "minLength": 1, "maxLength": 256},
+    "decided_at": {"type": "string", "format": "date-time"},
+    "decision": {
+      "type": "string",
+      "enum": [
+        "approved_for_test_generation",
+        "approved_for_patch_advice",
+        "approved_for_smith_review",
+        "rejected_by_operator",
+        "superseded"
+      ]
+    },
+    "reason": {"type": "string", "maxLength": 4096},
+    "prior_promotion_status": {
+      "type": "string",
+      "enum": [
+        "pending_operator_review",
+        "rejected_by_operator",
+        "approved_for_test_generation",
+        "approved_for_patch_advice",
+        "approved_for_smith_review",
+        "promoted_to_regression_gate",
+        "closed_by_fix",
+        "superseded"
+      ]
+    },
+    "new_promotion_status": {
+      "type": "string",
+      "enum": [
+        "rejected_by_operator",
+        "approved_for_test_generation",
+        "approved_for_patch_advice",
+        "approved_for_smith_review",
+        "superseded"
+      ]
+    },
+    "approval_hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}
