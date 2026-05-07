@@ -30,3 +30,4 @@ The current implementation includes:
 - Replay writes its own run artifact and checks canonical source hashes before
   and after replay execution.
 - Replay mismatches mark replay run artifacts failed and write exit code `2`.
+- Replay CLI validates receipt schema and hash before target-source lookup.

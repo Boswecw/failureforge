@@ -113,8 +113,8 @@ def cmd_replay(args: argparse.Namespace) -> int:
     receipt_path = Path(args.receipt_path)
     if not receipt_path.is_absolute():
         receipt_path = root / receipt_path
-    receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
     try:
+        receipt = _load_replay_receipt(receipt_path)
         target_source, adapter = _load_run_target(
             root=root,
             target=receipt["target_repo"],
@@ -136,6 +136,21 @@ def cmd_replay(args: argparse.Namespace) -> int:
         return 5
     print(json.dumps(result.__dict__, indent=2))
     return 0 if result.matches_original else 2
+
+
+def _load_replay_receipt(receipt_path: Path) -> dict:
+    try:
+        receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+        validate_failure_receipt(receipt)
+        verify_receipt_hash(receipt)
+    except (
+        OSError,
+        json.JSONDecodeError,
+        SchemaValidationError,
+        ReceiptHashMismatch,
+    ) as exc:
+        raise ValueError(f"invalid replay receipt {receipt_path}: {exc}") from exc
+    return receipt
 
 
 def cmd_verify(args: argparse.Namespace) -> int:
