@@ -16,6 +16,7 @@ It writes evidence under `reports/failureforge-verification/latest/` and runs:
 - adapter-aware external-source replay tests
 - replay command context tests for adapter-backed receipts
 - canonical source fingerprint tests
+- fail-closed canonical mutation tests
 - documentation assembly
 
 Supporting commands:

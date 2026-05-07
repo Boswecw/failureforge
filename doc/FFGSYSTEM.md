@@ -1,6 +1,6 @@
 # FFGSYSTEM
 
-Generated from doc/system on 2026-05-07T04:34:08Z.
+Generated from doc/system on 2026-05-07T04:40:57Z.
 
 # 00 Purpose
 
@@ -40,6 +40,7 @@ The current implementation includes:
 - Adapter-aware replay for receipts produced from external target sources.
 - Replay command context capture for adapter-backed target-source receipts.
 - Per-run canonical source fingerprinting in `SandboxRun.v1`.
+- Fail-closed canonical mutation handling before receipt files are accepted.
 
 # 20 Contracts
 
@@ -118,6 +119,7 @@ It writes evidence under `reports/failureforge-verification/latest/` and runs:
 - adapter-aware external-source replay tests
 - replay command context tests for adapter-backed receipts
 - canonical source fingerprint tests
+- fail-closed canonical mutation tests
 - documentation assembly
 
 Supporting commands:

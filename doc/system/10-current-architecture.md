@@ -24,3 +24,4 @@ The current implementation includes:
 - Adapter-aware replay for receipts produced from external target sources.
 - Replay command context capture for adapter-backed target-source receipts.
 - Per-run canonical source fingerprinting in `SandboxRun.v1`.
+- Fail-closed canonical mutation handling before receipt files are accepted.

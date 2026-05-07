@@ -98,6 +98,18 @@ class AttackOutcome:
     exit_code: int | None
 
 
+class CanonicalSourceMutationError(RuntimeError):
+    """Raised when the canonical source hash changes during sandbox execution."""
+
+    def __init__(self, sandbox_run: dict[str, Any]) -> None:
+        super().__init__(
+            "canonical source mutated during sandbox run: "
+            f"{sandbox_run['canonical_source_hash_before']} != "
+            f"{sandbox_run['canonical_source_hash_after']}"
+        )
+        self.sandbox_run = sandbox_run
+
+
 def run_attack_against_target(
     *,
     workspace: Path,
@@ -334,7 +346,7 @@ class SandboxRunner:
             json.dumps(sandbox_run, indent=2, sort_keys=True), encoding="utf-8"
         )
 
-        receipt_paths: list[Path] = []
+        receipt_docs: list[tuple[Path, dict[str, Any]]] = []
         stdout_chunks: list[str] = []
         stderr_chunks: list[str] = []
 
@@ -359,20 +371,31 @@ class SandboxRunner:
                     f"[{lane}/{outcome.failure_case.failure_case_id}] "
                     f"{outcome.failure_case.attack_type}\n{outcome.stderr_text}"
                 )
-                receipt_paths.append(self._write_receipt(paths, run_id, outcome))
+                receipt_docs.append(self._build_receipt(paths, run_id, outcome))
 
         (paths.run_dir / "stdout.log").write_text("\n".join(stdout_chunks), encoding="utf-8")
         (paths.run_dir / "stderr.log").write_text("\n".join(stderr_chunks), encoding="utf-8")
-        (paths.run_dir / "exit_code.txt").write_text("0\n", encoding="utf-8")
 
         sandbox_run["completed_at"] = _utc_now()
-        sandbox_run["status"] = "completed"
-        sandbox_run["receipt_count"] = len(receipt_paths)
         canonical_hash_after = _hash_tree(self._target_repo_source)
         sandbox_run["canonical_source_hash_after"] = canonical_hash_after
         sandbox_run["canonical_source_mutated"] = (
             canonical_hash_after != canonical_hash_before
         )
+        if sandbox_run["canonical_source_mutated"]:
+            sandbox_run["status"] = "failed"
+            sandbox_run["receipt_count"] = 0
+            (paths.run_dir / "exit_code.txt").write_text("5\n", encoding="utf-8")
+            validate_sandbox_run(sandbox_run)
+            (paths.run_dir / "sandbox_run.json").write_text(
+                json.dumps(sandbox_run, indent=2, sort_keys=True), encoding="utf-8"
+            )
+            raise CanonicalSourceMutationError(sandbox_run)
+
+        receipt_paths = self._write_receipts(receipt_docs)
+        sandbox_run["status"] = "completed"
+        sandbox_run["receipt_count"] = len(receipt_paths)
+        (paths.run_dir / "exit_code.txt").write_text("0\n", encoding="utf-8")
         validate_sandbox_run(sandbox_run)
         (paths.run_dir / "sandbox_run.json").write_text(
             json.dumps(sandbox_run, indent=2, sort_keys=True), encoding="utf-8"
@@ -405,7 +428,9 @@ class SandboxRunner:
             shutil.rmtree(dest)
         shutil.copytree(self._target_repo_source, dest)
 
-    def _write_receipt(self, paths: SandboxPaths, run_id: str, outcome: AttackOutcome) -> Path:
+    def _build_receipt(
+        self, paths: SandboxPaths, run_id: str, outcome: AttackOutcome
+    ) -> tuple[Path, dict[str, Any]]:
         receipt_id = _stable_id("FHR", run_id, outcome.failure_case.failure_case_id)
         repro_command = self._build_repro_command(receipt_id)
         receipt = {
@@ -435,8 +460,14 @@ class SandboxRunner:
         sealed = apply_receipt_hash(receipt)
         validate_failure_receipt(sealed)
         out = paths.receipts_dir / f"{receipt_id}.json"
-        out.write_text(json.dumps(sealed, indent=2, sort_keys=True), encoding="utf-8")
-        return out
+        return out, sealed
+
+    def _write_receipts(self, receipt_docs: list[tuple[Path, dict[str, Any]]]) -> list[Path]:
+        paths: list[Path] = []
+        for path, sealed in receipt_docs:
+            path.write_text(json.dumps(sealed, indent=2, sort_keys=True), encoding="utf-8")
+            paths.append(path)
+        return paths
 
     def _build_repro_command(self, receipt_id: str) -> str:
         parts = [
