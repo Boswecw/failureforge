@@ -26,3 +26,7 @@ artifacts and carry no mutation, repair, or approval authority.
 `TargetAdapter.v1` is also a draft local contract. It must declare supported
 attack families, copy strategy, forbidden paths, artifact capture roots, and a
 canonical mutation guard before FailureForge expands to a new target.
+
+`SandboxRun.v1` runner-produced records include canonical source hashes before
+and after execution plus a mutation flag. Minimal historical run records remain
+valid for compatibility.

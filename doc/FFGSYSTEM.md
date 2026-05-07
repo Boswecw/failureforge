@@ -1,6 +1,6 @@
 # FFGSYSTEM
 
-Generated from doc/system on 2026-05-07T04:30:29Z.
+Generated from doc/system on 2026-05-07T04:34:08Z.
 
 # 00 Purpose
 
@@ -39,6 +39,7 @@ The current implementation includes:
   canonical-source paths.
 - Adapter-aware replay for receipts produced from external target sources.
 - Replay command context capture for adapter-backed target-source receipts.
+- Per-run canonical source fingerprinting in `SandboxRun.v1`.
 
 # 20 Contracts
 
@@ -68,6 +69,10 @@ artifacts and carry no mutation, repair, or approval authority.
 `TargetAdapter.v1` is also a draft local contract. It must declare supported
 attack families, copy strategy, forbidden paths, artifact capture roots, and a
 canonical mutation guard before FailureForge expands to a new target.
+
+`SandboxRun.v1` runner-produced records include canonical source hashes before
+and after execution plus a mutation flag. Minimal historical run records remain
+valid for compatibility.
 
 # 30 Integration Boundaries
 
@@ -112,6 +117,7 @@ It writes evidence under `reports/failureforge-verification/latest/` and runs:
 - adapter required-command and forbidden-source-path tests
 - adapter-aware external-source replay tests
 - replay command context tests for adapter-backed receipts
+- canonical source fingerprint tests
 - documentation assembly
 
 Supporting commands:

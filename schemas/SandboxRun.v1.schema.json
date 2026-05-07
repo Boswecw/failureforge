@@ -40,6 +40,12 @@
     "started_at": {"type": "string", "format": "date-time"},
     "completed_at": {"type": ["string", "null"], "format": "date-time"},
     "status": {"type": "string", "enum": ["running", "completed", "failed", "aborted"]},
-    "receipt_count": {"type": "integer", "minimum": 0}
+    "receipt_count": {"type": "integer", "minimum": 0},
+    "canonical_source_hash_before": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "canonical_source_hash_after": {
+      "type": ["string", "null"],
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "canonical_source_mutated": {"type": ["boolean", "null"]}
   }
 }

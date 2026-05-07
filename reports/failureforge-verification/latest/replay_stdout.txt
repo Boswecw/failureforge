@@ -1,5 +1,5 @@
 {
-  "receipt_id": "FHR-3bba0c7ac5",
+  "receipt_id": "FHR-a598c26034",
   "matches_original": true,
   "original_actual_result": "registry rejected as expected: TypeError('payload must be a mapping')",
   "replayed_actual_result": "registry rejected as expected: TypeError('payload must be a mapping')",

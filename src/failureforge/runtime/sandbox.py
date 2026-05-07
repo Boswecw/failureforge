@@ -21,6 +21,7 @@ import traceback
 from contextlib import redirect_stderr, redirect_stdout
 from dataclasses import dataclass
 from datetime import datetime, timezone
+import hashlib
 from pathlib import Path
 from typing import Any, Iterable
 
@@ -43,10 +44,18 @@ def _utc_now() -> str:
 
 
 def _stable_id(prefix: str, *parts: str) -> str:
-    import hashlib
-
     digest = hashlib.sha256("|".join(parts).encode("utf-8")).hexdigest()[:10]
     return f"{prefix}-{digest}"
+
+
+def _hash_tree(root: Path) -> str:
+    digest = hashlib.sha256()
+    for path in sorted(p for p in root.rglob("*") if p.is_file()):
+        digest.update(path.relative_to(root).as_posix().encode("utf-8"))
+        digest.update(b"\0")
+        digest.update(path.read_bytes())
+        digest.update(b"\0")
+    return digest.hexdigest()
 
 
 @dataclass
@@ -292,6 +301,7 @@ class SandboxRunner:
         run_id = sandbox_run_id or _stable_id(
             "SR", self._target_repo_name, _utc_now(), str(id(self))
         )
+        canonical_hash_before = _hash_tree(self._target_repo_source)
         if agents is None:
             agents = [agent or EdgeCaseAgent(target_repo=self._target_repo_name)]
         self._preflight_agent_catalogs(agents)
@@ -315,6 +325,9 @@ class SandboxRunner:
             "completed_at": None,
             "status": "running",
             "receipt_count": 0,
+            "canonical_source_hash_before": canonical_hash_before,
+            "canonical_source_hash_after": None,
+            "canonical_source_mutated": None,
         }
         validate_sandbox_run(sandbox_run)
         (paths.run_dir / "sandbox_run.json").write_text(
@@ -355,6 +368,11 @@ class SandboxRunner:
         sandbox_run["completed_at"] = _utc_now()
         sandbox_run["status"] = "completed"
         sandbox_run["receipt_count"] = len(receipt_paths)
+        canonical_hash_after = _hash_tree(self._target_repo_source)
+        sandbox_run["canonical_source_hash_after"] = canonical_hash_after
+        sandbox_run["canonical_source_mutated"] = (
+            canonical_hash_after != canonical_hash_before
+        )
         validate_sandbox_run(sandbox_run)
         (paths.run_dir / "sandbox_run.json").write_text(
             json.dumps(sandbox_run, indent=2, sort_keys=True), encoding="utf-8"

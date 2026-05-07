@@ -1,6 +1,6 @@
 """FailureForge — sandbox-only failure-harvesting subsystem.
 
-Implements the local FailureForge slice family through Slice 15: controlled
+Implements the local FailureForge slice family through Slice 16: controlled
 failure probes, immutable evidence, replay, reporting, clustering, advisory
 adjudication, read-only governance bridge artifacts, and target adapter guards.
 """
