@@ -3,7 +3,7 @@
 Sandbox-only failure-harvesting subsystem and read-only governance evidence
 bridge for Forge. Per the
 `docs/plans/failureforge_repo_reconciled_plan_set` plan, this directory
-implements Slices 01-22:
+implements Slices 01-23:
 
 - **Slice 01** - `FailureCase.v1`, `FailureHarvestReceipt.v1`, `SandboxRun.v1`,
   `HardeningReport.v1` contracts, Edge-Case Agent, sandbox run script, replay
@@ -40,6 +40,7 @@ implements Slices 01-22:
 - **Slice 20** - Runtime replay canonical mutation guard.
 - **Slice 21** - Replay mismatch artifact status alignment.
 - **Slice 22** - CLI replay receipt validation before target lookup.
+- **Slice 23** - Malformed JSON handling in `verify-receipts`.
 
 ## Doctrine
 
@@ -77,6 +78,8 @@ implements Slices 01-22:
 - Replay mismatch artifacts are marked failed and carry exit code `2`, matching
   the CLI result.
 - Replay validates receipt schema and hash before resolving a target source.
+- Receipt verification reports malformed JSON as a validation failure without a
+  traceback.
 
 ## Layout
 
@@ -95,7 +98,7 @@ failureforge/
     reporting/scorer.py     # Slice 03 ranking + HardeningReport generator
     validation/             # JSON Schema + receipt-hash validators
     cli.py                  # run-sandbox, replay, verify-receipts, morning-report
-  tests/                    # pytest suite for Slices 01-22
+  tests/                    # pytest suite for Slices 01-23
   sandbox/
     workspaces/             # copied repo workspaces
     runs/                   # per-run sandbox_run.json + stdout/stderr

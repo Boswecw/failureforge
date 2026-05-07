@@ -22,6 +22,7 @@ It writes evidence under `reports/failureforge-verification/latest/` and runs:
 - replay canonical mutation guard tests
 - replay mismatch artifact status tests
 - CLI replay receipt validation tests
+- verify-receipts malformed JSON tests
 - documentation assembly
 
 Supporting commands:

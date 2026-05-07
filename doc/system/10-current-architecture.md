@@ -31,3 +31,4 @@ The current implementation includes:
   and after replay execution.
 - Replay mismatches mark replay run artifacts failed and write exit code `2`.
 - Replay CLI validates receipt schema and hash before target-source lookup.
+- Receipt verification reports malformed receipt JSON as a validation failure.

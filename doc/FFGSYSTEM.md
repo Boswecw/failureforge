@@ -1,6 +1,6 @@
 # FFGSYSTEM
 
-Generated from doc/system on 2026-05-07T09:22:31Z.
+Generated from doc/system on 2026-05-07T09:25:34Z.
 
 # 00 Purpose
 
@@ -47,6 +47,7 @@ The current implementation includes:
   and after replay execution.
 - Replay mismatches mark replay run artifacts failed and write exit code `2`.
 - Replay CLI validates receipt schema and hash before target-source lookup.
+- Receipt verification reports malformed receipt JSON as a validation failure.
 
 # 20 Contracts
 
@@ -131,6 +132,7 @@ It writes evidence under `reports/failureforge-verification/latest/` and runs:
 - replay canonical mutation guard tests
 - replay mismatch artifact status tests
 - CLI replay receipt validation tests
+- verify-receipts malformed JSON tests
 - documentation assembly
 
 Supporting commands:

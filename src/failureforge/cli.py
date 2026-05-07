@@ -163,11 +163,16 @@ def cmd_verify(args: argparse.Namespace) -> int:
         print(f"no receipts found under {receipts_dir}", file=sys.stderr)
         return 1
     for p in paths:
-        body = json.loads(p.read_text(encoding="utf-8"))
         try:
+            body = json.loads(p.read_text(encoding="utf-8"))
             validate_failure_receipt(body)
             verify_receipt_hash(body)
-        except (SchemaValidationError, ReceiptHashMismatch) as exc:
+        except (
+            OSError,
+            json.JSONDecodeError,
+            SchemaValidationError,
+            ReceiptHashMismatch,
+        ) as exc:
             failures.append({"receipt": str(p.relative_to(root)), "error": str(exc)})
             rc = 2
     summary = {"checked": len(paths), "failures": failures}
