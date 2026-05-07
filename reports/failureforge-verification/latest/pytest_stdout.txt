@@ -4,7 +4,7 @@ rootdir: /home/charlie/Forge/ecosystem/failureforge
 configfile: pyproject.toml
 testpaths: tests
 plugins: hypothesis-6.151.10, cov-7.1.0, anyio-4.2.0
-collected 87 items
+collected 88 items
 
 tests/test_slice_01_contracts_and_sandbox.py ......                      [  6%]
 tests/test_slice_02_validation_gate.py .....                             [ 12%]
@@ -12,23 +12,24 @@ tests/test_slice_03_ranking.py ....                                      [ 17%]
 tests/test_slice_04_persistence_push.py ...                              [ 20%]
 tests/test_slice_05_operator_cli.py .....                                [ 26%]
 tests/test_slice_06_promotion_handshake.py ...                           [ 29%]
-tests/test_slice_07_multi_agent.py ..........                            [ 41%]
-tests/test_slice_08_clustering.py .......                                [ 49%]
-tests/test_slice_09_adjudication.py .....                                [ 55%]
-tests/test_slice_10_bridge_contracts.py .......                          [ 63%]
-tests/test_slice_10_governance_reconciliation.py ......                  [ 70%]
-tests/test_slice_11_target_adapters.py ........                          [ 79%]
-tests/test_slice_12_external_target_source.py .....                      [ 85%]
-tests/test_slice_13_adapter_preflight.py ...                             [ 88%]
-tests/test_slice_14_adapter_replay.py ...                                [ 91%]
-tests/test_slice_15_replay_command_context.py ..                         [ 94%]
-tests/test_slice_16_canonical_source_fingerprint.py ..                   [ 96%]
-tests/test_slice_17_fail_closed_canonical_mutation.py .                  [ 97%]
-tests/test_slice_18_cli_canonical_mutation_exit.py .                     [ 98%]
-tests/test_slice_19_cli_replay_canonical_mutation_exit.py .              [100%]
+tests/test_slice_07_multi_agent.py ..........                            [ 40%]
+tests/test_slice_08_clustering.py .......                                [ 48%]
+tests/test_slice_09_adjudication.py .....                                [ 54%]
+tests/test_slice_10_bridge_contracts.py .......                          [ 62%]
+tests/test_slice_10_governance_reconciliation.py ......                  [ 69%]
+tests/test_slice_11_target_adapters.py ........                          [ 78%]
+tests/test_slice_12_external_target_source.py .....                      [ 84%]
+tests/test_slice_13_adapter_preflight.py ...                             [ 87%]
+tests/test_slice_14_adapter_replay.py ...                                [ 90%]
+tests/test_slice_15_replay_command_context.py ..                         [ 93%]
+tests/test_slice_16_canonical_source_fingerprint.py ..                   [ 95%]
+tests/test_slice_17_fail_closed_canonical_mutation.py .                  [ 96%]
+tests/test_slice_18_cli_canonical_mutation_exit.py .                     [ 97%]
+tests/test_slice_19_cli_replay_canonical_mutation_exit.py .              [ 98%]
+tests/test_slice_20_replay_canonical_mutation_guard.py .                 [100%]
 
 =============================== warnings summary ===============================
-tests/test_slice_01_contracts_and_sandbox.py: 68 warnings
+tests/test_slice_01_contracts_and_sandbox.py: 71 warnings
 tests/test_slice_02_validation_gate.py: 20 warnings
 tests/test_slice_03_ranking.py: 1 warning
 tests/test_slice_04_persistence_push.py: 82 warnings
@@ -42,12 +43,13 @@ tests/test_slice_10_governance_reconciliation.py: 8 warnings
 tests/test_slice_11_target_adapters.py: 23 warnings
 tests/test_slice_12_external_target_source.py: 30 warnings
 tests/test_slice_13_adapter_preflight.py: 3 warnings
-tests/test_slice_14_adapter_replay.py: 38 warnings
+tests/test_slice_14_adapter_replay.py: 41 warnings
 tests/test_slice_15_replay_command_context.py: 30 warnings
 tests/test_slice_16_canonical_source_fingerprint.py: 32 warnings
 tests/test_slice_17_fail_closed_canonical_mutation.py: 4 warnings
+tests/test_slice_20_replay_canonical_mutation_guard.py: 4 warnings
   /home/charlie/Forge/ecosystem/failureforge/src/failureforge/validation/schemas.py:51: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
     return jsonschema.RefResolver(base_uri=base_uri, referrer=schema, store=store)
 
 -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
-======================= 87 passed, 933 warnings in 1.80s =======================
+======================= 88 passed, 943 warnings in 1.79s =======================

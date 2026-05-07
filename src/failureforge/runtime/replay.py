@@ -13,10 +13,18 @@ from pathlib import Path
 from typing import Any
 
 from failureforge.agents.edge_case import FailureCaseSpec
-from failureforge.runtime.sandbox import SandboxRunner, run_attack_against_target
+from failureforge.runtime.sandbox import (
+    CanonicalSourceMutationError,
+    SandboxPaths,
+    SandboxRunner,
+    _hash_tree,
+    _utc_now,
+    run_attack_against_target,
+)
 from failureforge.validation import (
-    verify_receipt_hash,
     validate_failure_receipt,
+    validate_sandbox_run,
+    verify_receipt_hash,
 )
 
 
@@ -56,11 +64,39 @@ def replay_receipt(
         source_ref=receipt["target_ref"],
         target_adapter=target_adapter,
     )
-    # Re-copy the per-replay workspace under a deterministic id so the replay
-    # is isolated from the original run's workspace.
     replay_run_id = f"SR-replay-{receipt['receipt_id']}"
+    canonical_source = runner._target_repo_source  # type: ignore[attr-defined]
+    canonical_hash_before = _hash_tree(canonical_source)
     paths = _ensure_workspace(runner=runner, sandbox_run_id=replay_run_id)
-    outcome = run_attack_against_target(workspace=paths, case=case)
+    replay_run = _build_replay_run(
+        receipt=receipt,
+        case=case,
+        paths=paths,
+        sandbox_run_id=replay_run_id,
+        canonical_hash_before=canonical_hash_before,
+    )
+    _write_replay_run(paths=paths, sandbox_run=replay_run)
+
+    outcome = run_attack_against_target(workspace=paths.workspace, case=case)
+    (paths.run_dir / "stdout.log").write_text(outcome.stdout_text, encoding="utf-8")
+    (paths.run_dir / "stderr.log").write_text(outcome.stderr_text, encoding="utf-8")
+
+    canonical_hash_after = _hash_tree(canonical_source)
+    replay_run["completed_at"] = _utc_now()
+    replay_run["canonical_source_hash_after"] = canonical_hash_after
+    replay_run["canonical_source_mutated"] = (
+        canonical_hash_after != canonical_hash_before
+    )
+    if replay_run["canonical_source_mutated"]:
+        replay_run["status"] = "failed"
+        (paths.run_dir / "exit_code.txt").write_text("5\n", encoding="utf-8")
+        _write_replay_run(paths=paths, sandbox_run=replay_run)
+        raise CanonicalSourceMutationError(replay_run)
+
+    replay_run["status"] = "completed"
+    (paths.run_dir / "exit_code.txt").write_text("0\n", encoding="utf-8")
+    _write_replay_run(paths=paths, sandbox_run=replay_run)
+
     return ReplayResult(
         receipt_id=receipt["receipt_id"],
         matches_original=outcome.actual_result == receipt["actual_result"]
@@ -103,13 +139,45 @@ def _spec_from_dict(case: dict[str, Any]) -> FailureCaseSpec:
     )
 
 
-def _ensure_workspace(*, runner: SandboxRunner, sandbox_run_id: str) -> Path:
-    from failureforge.runtime.sandbox import SandboxPaths
-
+def _ensure_workspace(*, runner: SandboxRunner, sandbox_run_id: str) -> SandboxPaths:
     paths = SandboxPaths.for_run(
         sandbox_root=runner._sandbox_root,  # type: ignore[attr-defined]
         sandbox_run_id=sandbox_run_id,
         target_repo=runner._target_repo_name,  # type: ignore[attr-defined]
     )
     runner._copy_workspace(paths.workspace)  # type: ignore[attr-defined]
-    return paths.workspace
+    return paths
+
+
+def _build_replay_run(
+    *,
+    receipt: dict[str, Any],
+    case: FailureCaseSpec,
+    paths: SandboxPaths,
+    sandbox_run_id: str,
+    canonical_hash_before: str,
+) -> dict[str, Any]:
+    sandbox_run = {
+        "schema_version": "SandboxRun.v1",
+        "sandbox_run_id": sandbox_run_id,
+        "target_repo": receipt["target_repo"],
+        "source_ref": receipt["target_ref"],
+        "workspace_path": str(paths.workspace.relative_to(paths.sandbox_root.parent)),
+        "agent_lanes": [case.agent_lane],
+        "started_at": _utc_now(),
+        "completed_at": None,
+        "status": "running",
+        "receipt_count": 0,
+        "canonical_source_hash_before": canonical_hash_before,
+        "canonical_source_hash_after": None,
+        "canonical_source_mutated": None,
+    }
+    validate_sandbox_run(sandbox_run)
+    return sandbox_run
+
+
+def _write_replay_run(*, paths: SandboxPaths, sandbox_run: dict[str, Any]) -> None:
+    validate_sandbox_run(sandbox_run)
+    (paths.run_dir / "sandbox_run.json").write_text(
+        json.dumps(sandbox_run, indent=2, sort_keys=True), encoding="utf-8"
+    )

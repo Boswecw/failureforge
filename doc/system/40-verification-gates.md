@@ -19,6 +19,7 @@ It writes evidence under `reports/failureforge-verification/latest/` and runs:
 - fail-closed canonical mutation tests
 - CLI canonical mutation exit tests
 - CLI replay canonical mutation exit tests
+- replay canonical mutation guard tests
 - documentation assembly
 
 Supporting commands:

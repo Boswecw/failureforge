@@ -27,3 +27,5 @@ The current implementation includes:
 - Fail-closed canonical mutation handling before receipt files are accepted.
 - CLI canonical mutation failures return exit code `5`.
 - Replay canonical mutation failures return exit code `5` without replay JSON.
+- Replay writes its own run artifact and checks canonical source hashes before
+  and after replay execution.
