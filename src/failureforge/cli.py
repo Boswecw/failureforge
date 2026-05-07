@@ -108,11 +108,21 @@ def cmd_replay(args: argparse.Namespace) -> int:
     if not receipt_path.is_absolute():
         receipt_path = root / receipt_path
     receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
-    target_source = (root / "sandbox-targets" / receipt["target_repo"]).resolve()
+    try:
+        target_source, adapter = _load_run_target(
+            root=root,
+            target=receipt["target_repo"],
+            target_source_arg=args.target_source,
+            adapter_arg=args.adapter,
+        )
+    except ValueError as exc:
+        print(str(exc), file=sys.stderr)
+        return 2
     result = replay_receipt(
         receipt_path=receipt_path,
         sandbox_root=sandbox_root,
         target_repo_source=target_source,
+        target_adapter=adapter,
     )
     print(json.dumps(result.__dict__, indent=2))
     return 0 if result.matches_original else 2
@@ -208,6 +218,12 @@ def main(argv: list[str] | None = None) -> int:
 
     p_replay = sub.add_parser("replay", help="re-run an attack from a FailureHarvestReceipt")
     p_replay.add_argument("receipt_path")
+    p_replay.add_argument(
+        "--target-source",
+        default=None,
+        help="canonical target source path; requires --adapter",
+    )
+    p_replay.add_argument("--adapter", default=None, help="TargetAdapter.v1 JSON path")
     p_replay.set_defaults(func=cmd_replay)
 
     p_verify = sub.add_parser("verify-receipts", help="validate every receipt's schema + hash")

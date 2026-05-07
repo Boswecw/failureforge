@@ -12,6 +12,8 @@ It writes evidence under `reports/failureforge-verification/latest/` and runs:
 - no-canonical-mutation verification
 - target adapter schema and preflight tests
 - external target-source adapter requirement tests
+- adapter required-command and forbidden-source-path tests
+- adapter-aware external-source replay tests
 - documentation assembly
 
 Supporting commands:

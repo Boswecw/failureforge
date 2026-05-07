@@ -3,7 +3,7 @@
 Sandbox-only failure-harvesting subsystem and read-only governance evidence
 bridge for Forge. Per the
 `docs/plans/failureforge_repo_reconciled_plan_set` plan, this directory
-implements Slices 01-12:
+implements Slices 01-14:
 
 - **Slice 01** - `FailureCase.v1`, `FailureHarvestReceipt.v1`, `SandboxRun.v1`,
   `HardeningReport.v1` contracts, Edge-Case Agent, sandbox run script, replay
@@ -28,6 +28,9 @@ implements Slices 01-12:
   expansion beyond demo targets.
 - **Slice 12** - External target source gate requiring a validated adapter
   before probing any non-default source path.
+- **Slice 13** - Adapter preflight enforcement for required commands and
+  forbidden canonical-source paths.
+- **Slice 14** - Adapter-aware replay for external target-source receipts.
 
 ## Doctrine
 
@@ -49,6 +52,10 @@ implements Slices 01-12:
   guards before a non-demo target can be probed.
 - Explicit target source paths require target adapters; the demo target path
   remains the only adapter-optional execution route.
+- Adapter preflight blocks missing tools or forbidden source paths before any
+  workspace copy.
+- Replay can use adapter-backed external target sources and applies the same
+  preflight guard before copying a replay workspace.
 
 ## Layout
 
@@ -67,7 +74,7 @@ failureforge/
     reporting/scorer.py     # Slice 03 ranking + HardeningReport generator
     validation/             # JSON Schema + receipt-hash validators
     cli.py                  # run-sandbox, replay, verify-receipts, morning-report
-  tests/                    # pytest suite for Slices 01-12
+  tests/                    # pytest suite for Slices 01-14
   sandbox/
     workspaces/             # copied repo workspaces
     runs/                   # per-run sandbox_run.json + stdout/stderr
@@ -81,7 +88,7 @@ failureforge/
     verify_receipts.sh
 ```
 
-DataForge Local owns the operator API and persistence-facing Slice 04-12
+DataForge Local owns the operator API and persistence-facing Slice 04-14
 integration under `dataforge-Local/app/failureforge/`.
 
 ## Demo

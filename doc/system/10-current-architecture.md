@@ -19,3 +19,6 @@ The current implementation includes:
   target.
 - CLI target-source gating so non-default canonical source paths require a
   validated `TargetAdapter.v1`.
+- Adapter preflight enforcement for required commands and forbidden
+  canonical-source paths.
+- Adapter-aware replay for receipts produced from external target sources.

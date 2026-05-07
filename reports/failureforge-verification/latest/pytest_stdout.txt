@@ -4,21 +4,23 @@ rootdir: /home/charlie/Forge/ecosystem/failureforge
 configfile: pyproject.toml
 testpaths: tests
 plugins: hypothesis-6.151.10, cov-7.1.0, anyio-4.2.0
-collected 74 items
+collected 80 items
 
-tests/test_slice_01_contracts_and_sandbox.py ......                      [  8%]
-tests/test_slice_02_validation_gate.py .....                             [ 14%]
-tests/test_slice_03_ranking.py ....                                      [ 20%]
-tests/test_slice_04_persistence_push.py ...                              [ 24%]
-tests/test_slice_05_operator_cli.py .....                                [ 31%]
-tests/test_slice_06_promotion_handshake.py ...                           [ 35%]
-tests/test_slice_07_multi_agent.py ..........                            [ 48%]
-tests/test_slice_08_clustering.py .......                                [ 58%]
-tests/test_slice_09_adjudication.py .....                                [ 64%]
-tests/test_slice_10_bridge_contracts.py .......                          [ 74%]
-tests/test_slice_10_governance_reconciliation.py ......                  [ 82%]
-tests/test_slice_11_target_adapters.py ........                          [ 93%]
-tests/test_slice_12_external_target_source.py .....                      [100%]
+tests/test_slice_01_contracts_and_sandbox.py ......                      [  7%]
+tests/test_slice_02_validation_gate.py .....                             [ 13%]
+tests/test_slice_03_ranking.py ....                                      [ 18%]
+tests/test_slice_04_persistence_push.py ...                              [ 22%]
+tests/test_slice_05_operator_cli.py .....                                [ 28%]
+tests/test_slice_06_promotion_handshake.py ...                           [ 32%]
+tests/test_slice_07_multi_agent.py ..........                            [ 45%]
+tests/test_slice_08_clustering.py .......                                [ 53%]
+tests/test_slice_09_adjudication.py .....                                [ 60%]
+tests/test_slice_10_bridge_contracts.py .......                          [ 68%]
+tests/test_slice_10_governance_reconciliation.py ......                  [ 76%]
+tests/test_slice_11_target_adapters.py ........                          [ 86%]
+tests/test_slice_12_external_target_source.py .....                      [ 92%]
+tests/test_slice_13_adapter_preflight.py ...                             [ 96%]
+tests/test_slice_14_adapter_replay.py ...                                [100%]
 
 =============================== warnings summary ===============================
 tests/test_slice_01_contracts_and_sandbox.py: 68 warnings
@@ -34,8 +36,10 @@ tests/test_slice_10_bridge_contracts.py: 16 warnings
 tests/test_slice_10_governance_reconciliation.py: 8 warnings
 tests/test_slice_11_target_adapters.py: 23 warnings
 tests/test_slice_12_external_target_source.py: 30 warnings
+tests/test_slice_13_adapter_preflight.py: 3 warnings
+tests/test_slice_14_adapter_replay.py: 38 warnings
   /home/charlie/Forge/ecosystem/failureforge/src/failureforge/validation/schemas.py:51: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
     return jsonschema.RefResolver(base_uri=base_uri, referrer=schema, store=store)
 
 -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
-======================= 74 passed, 826 warnings in 1.63s =======================
+======================= 80 passed, 867 warnings in 1.71s =======================

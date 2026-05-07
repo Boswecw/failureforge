@@ -34,6 +34,7 @@ def replay_receipt(
     receipt_path: Path,
     sandbox_root: Path,
     target_repo_source: Path,
+    target_adapter: dict[str, Any] | None = None,
 ) -> ReplayResult:
     """Verify a receipt's hash, re-run the attack, and compare results.
 
@@ -53,6 +54,7 @@ def replay_receipt(
         target_repo_name=receipt["target_repo"],
         target_repo_source=target_repo_source,
         source_ref=receipt["target_ref"],
+        target_adapter=target_adapter,
     )
     # Re-copy the per-replay workspace under a deterministic id so the replay
     # is isolated from the original run's workspace.

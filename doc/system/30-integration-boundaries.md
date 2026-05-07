@@ -17,3 +17,7 @@ Boundary rules:
   families fail before workspace copy.
 - External target source paths require a matching adapter before sandbox
   execution can begin.
+- Adapter preflight rejects missing required commands or forbidden source paths
+  before workspace copy.
+- External-source replay must use the same adapter guard as external-source
+  sandbox execution.

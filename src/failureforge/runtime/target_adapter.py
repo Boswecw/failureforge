@@ -7,6 +7,7 @@ the minimum safety posture required before a non-demo target is probed.
 from __future__ import annotations
 
 import json
+import shutil
 from pathlib import Path
 from typing import Any
 
@@ -54,11 +55,21 @@ def validate_target_adapter_for_source(
     if guard["enabled"] is not True or guard["strategy"] != "pre_post_tree_hash":
         raise TargetAdapterError("adapter must require pre/post canonical hashing")
 
+    for command in adapter["required_commands"]:
+        if shutil.which(command) is None:
+            raise TargetAdapterError(
+                f"adapter required command is not available on PATH: {command!r}"
+            )
+
     for raw_path in adapter["forbidden_paths"]:
         path = Path(raw_path)
         if path.is_absolute() or ".." in path.parts:
             raise TargetAdapterError(
                 f"adapter forbidden path must be relative and contained: {raw_path!r}"
+            )
+        if (source / path).exists():
+            raise TargetAdapterError(
+                f"adapter forbidden path exists in canonical source: {raw_path!r}"
             )
 
     allowed_roots = set(adapter["artifact_capture_rules"]["allowed_roots"])

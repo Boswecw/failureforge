@@ -1,6 +1,6 @@
 # FFGSYSTEM
 
-Generated from doc/system on 2026-05-07T04:17:23Z.
+Generated from doc/system on 2026-05-07T04:26:16Z.
 
 # 00 Purpose
 
@@ -35,6 +35,9 @@ The current implementation includes:
   target.
 - CLI target-source gating so non-default canonical source paths require a
   validated `TargetAdapter.v1`.
+- Adapter preflight enforcement for required commands and forbidden
+  canonical-source paths.
+- Adapter-aware replay for receipts produced from external target sources.
 
 # 20 Contracts
 
@@ -84,6 +87,10 @@ Boundary rules:
   families fail before workspace copy.
 - External target source paths require a matching adapter before sandbox
   execution can begin.
+- Adapter preflight rejects missing required commands or forbidden source paths
+  before workspace copy.
+- External-source replay must use the same adapter guard as external-source
+  sandbox execution.
 
 # 40 Verification Gates
 
@@ -99,6 +106,8 @@ It writes evidence under `reports/failureforge-verification/latest/` and runs:
 - no-canonical-mutation verification
 - target adapter schema and preflight tests
 - external target-source adapter requirement tests
+- adapter required-command and forbidden-source-path tests
+- adapter-aware external-source replay tests
 - documentation assembly
 
 Supporting commands:
