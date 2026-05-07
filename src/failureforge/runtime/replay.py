@@ -93,14 +93,19 @@ def replay_receipt(
         _write_replay_run(paths=paths, sandbox_run=replay_run)
         raise CanonicalSourceMutationError(replay_run)
 
-    replay_run["status"] = "completed"
-    (paths.run_dir / "exit_code.txt").write_text("0\n", encoding="utf-8")
+    matches_original = (
+        outcome.actual_result == receipt["actual_result"]
+        and outcome.classification == receipt["classification"]
+    )
+    replay_run["status"] = "completed" if matches_original else "failed"
+    (paths.run_dir / "exit_code.txt").write_text(
+        "0\n" if matches_original else "2\n", encoding="utf-8"
+    )
     _write_replay_run(paths=paths, sandbox_run=replay_run)
 
     return ReplayResult(
         receipt_id=receipt["receipt_id"],
-        matches_original=outcome.actual_result == receipt["actual_result"]
-        and outcome.classification == receipt["classification"],
+        matches_original=matches_original,
         original_actual_result=receipt["actual_result"],
         replayed_actual_result=outcome.actual_result,
         replayed_classification=outcome.classification,

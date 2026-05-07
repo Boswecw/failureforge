@@ -1,6 +1,6 @@
 # FFGSYSTEM
 
-Generated from doc/system on 2026-05-07T09:08:00Z.
+Generated from doc/system on 2026-05-07T09:12:57Z.
 
 # 00 Purpose
 
@@ -45,6 +45,7 @@ The current implementation includes:
 - Replay canonical mutation failures return exit code `5` without replay JSON.
 - Replay writes its own run artifact and checks canonical source hashes before
   and after replay execution.
+- Replay mismatches mark replay run artifacts failed and write exit code `2`.
 
 # 20 Contracts
 
@@ -127,6 +128,7 @@ It writes evidence under `reports/failureforge-verification/latest/` and runs:
 - CLI canonical mutation exit tests
 - CLI replay canonical mutation exit tests
 - replay canonical mutation guard tests
+- replay mismatch artifact status tests
 - documentation assembly
 
 Supporting commands:

@@ -29,3 +29,4 @@ The current implementation includes:
 - Replay canonical mutation failures return exit code `5` without replay JSON.
 - Replay writes its own run artifact and checks canonical source hashes before
   and after replay execution.
+- Replay mismatches mark replay run artifacts failed and write exit code `2`.
