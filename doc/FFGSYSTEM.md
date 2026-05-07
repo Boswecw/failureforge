@@ -1,6 +1,6 @@
 # FFGSYSTEM
 
-Generated from doc/system on 2026-05-07T04:26:16Z.
+Generated from doc/system on 2026-05-07T04:30:29Z.
 
 # 00 Purpose
 
@@ -38,6 +38,7 @@ The current implementation includes:
 - Adapter preflight enforcement for required commands and forbidden
   canonical-source paths.
 - Adapter-aware replay for receipts produced from external target sources.
+- Replay command context capture for adapter-backed target-source receipts.
 
 # 20 Contracts
 
@@ -91,6 +92,8 @@ Boundary rules:
   before workspace copy.
 - External-source replay must use the same adapter guard as external-source
   sandbox execution.
+- Adapter-backed receipts must carry the replay arguments needed to preserve
+  target-source context.
 
 # 40 Verification Gates
 
@@ -108,6 +111,7 @@ It writes evidence under `reports/failureforge-verification/latest/` and runs:
 - external target-source adapter requirement tests
 - adapter required-command and forbidden-source-path tests
 - adapter-aware external-source replay tests
+- replay command context tests for adapter-backed receipts
 - documentation assembly
 
 Supporting commands:

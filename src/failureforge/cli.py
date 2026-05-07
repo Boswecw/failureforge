@@ -81,6 +81,8 @@ def cmd_run_sandbox(args: argparse.Namespace) -> int:
         target_repo_source=target_source,
         source_ref=args.source_ref,
         target_adapter=adapter,
+        replay_target_source_arg=args.target_source,
+        replay_adapter_arg=args.adapter,
     )
     result = runner.run(sandbox_run_id=args.run_id)
     receipts = load_and_verify_receipts(sandbox_root / "receipts")

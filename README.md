@@ -3,7 +3,7 @@
 Sandbox-only failure-harvesting subsystem and read-only governance evidence
 bridge for Forge. Per the
 `docs/plans/failureforge_repo_reconciled_plan_set` plan, this directory
-implements Slices 01-14:
+implements Slices 01-15:
 
 - **Slice 01** - `FailureCase.v1`, `FailureHarvestReceipt.v1`, `SandboxRun.v1`,
   `HardeningReport.v1` contracts, Edge-Case Agent, sandbox run script, replay
@@ -31,6 +31,8 @@ implements Slices 01-14:
 - **Slice 13** - Adapter preflight enforcement for required commands and
   forbidden canonical-source paths.
 - **Slice 14** - Adapter-aware replay for external target-source receipts.
+- **Slice 15** - Replay command context for adapter-backed target-source
+  receipts.
 
 ## Doctrine
 
@@ -56,6 +58,8 @@ implements Slices 01-14:
   workspace copy.
 - Replay can use adapter-backed external target sources and applies the same
   preflight guard before copying a replay workspace.
+- Receipts from adapter-backed runs carry the target-source and adapter replay
+  arguments needed to reproduce the same source context.
 
 ## Layout
 
@@ -74,7 +78,7 @@ failureforge/
     reporting/scorer.py     # Slice 03 ranking + HardeningReport generator
     validation/             # JSON Schema + receipt-hash validators
     cli.py                  # run-sandbox, replay, verify-receipts, morning-report
-  tests/                    # pytest suite for Slices 01-14
+  tests/                    # pytest suite for Slices 01-15
   sandbox/
     workspaces/             # copied repo workspaces
     runs/                   # per-run sandbox_run.json + stdout/stderr
@@ -88,7 +92,7 @@ failureforge/
     verify_receipts.sh
 ```
 
-DataForge Local owns the operator API and persistence-facing Slice 04-14
+DataForge Local owns the operator API and persistence-facing Slice 04-15
 integration under `dataforge-Local/app/failureforge/`.
 
 ## Demo

@@ -14,6 +14,7 @@ It writes evidence under `reports/failureforge-verification/latest/` and runs:
 - external target-source adapter requirement tests
 - adapter required-command and forbidden-source-path tests
 - adapter-aware external-source replay tests
+- replay command context tests for adapter-backed receipts
 - documentation assembly
 
 Supporting commands:

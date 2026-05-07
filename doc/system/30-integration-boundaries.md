@@ -21,3 +21,5 @@ Boundary rules:
   before workspace copy.
 - External-source replay must use the same adapter guard as external-source
   sandbox execution.
+- Adapter-backed receipts must carry the replay arguments needed to preserve
+  target-source context.

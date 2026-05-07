@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import io
 import json
+import shlex
 import shutil
 import sys
 import traceback
@@ -241,12 +242,16 @@ class SandboxRunner:
         target_repo_source: Path,
         source_ref: str = "local",
         target_adapter: dict[str, Any] | None = None,
+        replay_target_source_arg: str | None = None,
+        replay_adapter_arg: str | None = None,
     ) -> None:
         self._sandbox_root = sandbox_root.resolve()
         self._target_repo_name = target_repo_name
         self._target_repo_source = target_repo_source.resolve()
         self._source_ref = source_ref
         self._target_adapter = target_adapter
+        self._replay_target_source_arg = replay_target_source_arg
+        self._replay_adapter_arg = replay_adapter_arg
 
         if not self._target_repo_source.exists():
             raise FileNotFoundError(
@@ -384,9 +389,7 @@ class SandboxRunner:
 
     def _write_receipt(self, paths: SandboxPaths, run_id: str, outcome: AttackOutcome) -> Path:
         receipt_id = _stable_id("FHR", run_id, outcome.failure_case.failure_case_id)
-        repro_command = (
-            f"./scripts/replay_failure.sh sandbox/receipts/{receipt_id}.json"
-        )
+        repro_command = self._build_repro_command(receipt_id)
         receipt = {
             "schema_version": "FailureHarvestReceipt.v1",
             "receipt_id": receipt_id,
@@ -416,6 +419,17 @@ class SandboxRunner:
         out = paths.receipts_dir / f"{receipt_id}.json"
         out.write_text(json.dumps(sealed, indent=2, sort_keys=True), encoding="utf-8")
         return out
+
+    def _build_repro_command(self, receipt_id: str) -> str:
+        parts = [
+            "./scripts/replay_failure.sh",
+            f"sandbox/receipts/{receipt_id}.json",
+        ]
+        if self._replay_target_source_arg is not None:
+            parts.extend(["--target-source", self._replay_target_source_arg])
+        if self._replay_adapter_arg is not None:
+            parts.extend(["--adapter", self._replay_adapter_arg])
+        return " ".join(shlex.quote(p) for p in parts)
 
 
 def list_receipts(sandbox_root: Path) -> Iterable[Path]:
