@@ -6,7 +6,7 @@
 - sandbox_run: 0
 - receipt_verify: 0
 - replay: 0
-- replay_receipt: sandbox/receipts/FHR-33955cc3fd.json
+- replay_receipt: sandbox/receipts/FHR-0634769137.json
 - replay_receipt_copy: reports/failureforge-verification/latest/replay_receipt.json
 - no_canonical_mutation: 0
 - doc_build: 0

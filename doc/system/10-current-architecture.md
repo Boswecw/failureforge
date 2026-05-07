@@ -25,3 +25,4 @@ The current implementation includes:
 - Replay command context capture for adapter-backed target-source receipts.
 - Per-run canonical source fingerprinting in `SandboxRun.v1`.
 - Fail-closed canonical mutation handling before receipt files are accepted.
+- CLI canonical mutation failures return exit code `5`.

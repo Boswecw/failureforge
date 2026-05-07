@@ -16,7 +16,7 @@ from failureforge.forgecommand import (
     render_run_detail_text,
 )
 from failureforge.runtime.replay import replay_receipt
-from failureforge.runtime.sandbox import SandboxRunner
+from failureforge.runtime.sandbox import CanonicalSourceMutationError, SandboxRunner
 from failureforge.runtime.target_adapter import load_target_adapter
 from failureforge.reporting.scorer import (
     build_hardening_report,
@@ -84,7 +84,11 @@ def cmd_run_sandbox(args: argparse.Namespace) -> int:
         replay_target_source_arg=args.target_source,
         replay_adapter_arg=args.adapter,
     )
-    result = runner.run(sandbox_run_id=args.run_id)
+    try:
+        result = runner.run(sandbox_run_id=args.run_id)
+    except CanonicalSourceMutationError as exc:
+        print(str(exc), file=sys.stderr)
+        return 5
     receipts = load_and_verify_receipts(sandbox_root / "receipts")
     report = build_hardening_report(
         sandbox_run_id=result["sandbox_run"]["sandbox_run_id"],

@@ -3,7 +3,7 @@
 Sandbox-only failure-harvesting subsystem and read-only governance evidence
 bridge for Forge. Per the
 `docs/plans/failureforge_repo_reconciled_plan_set` plan, this directory
-implements Slices 01-17:
+implements Slices 01-18:
 
 - **Slice 01** - `FailureCase.v1`, `FailureHarvestReceipt.v1`, `SandboxRun.v1`,
   `HardeningReport.v1` contracts, Edge-Case Agent, sandbox run script, replay
@@ -35,6 +35,7 @@ implements Slices 01-17:
   receipts.
 - **Slice 16** - Per-run canonical source fingerprinting in `SandboxRun.v1`.
 - **Slice 17** - Fail-closed canonical mutation handling before receipt writes.
+- **Slice 18** - CLI canonical mutation exit handling for fail-closed runs.
 
 ## Doctrine
 
@@ -64,6 +65,7 @@ implements Slices 01-17:
   arguments needed to reproduce the same source context.
 - Sandbox runs record canonical source hashes before and after execution.
 - If canonical source hashes differ, the run fails with no accepted receipts.
+- The CLI maps canonical source mutation failures to exit code `5`.
 
 ## Layout
 
@@ -82,7 +84,7 @@ failureforge/
     reporting/scorer.py     # Slice 03 ranking + HardeningReport generator
     validation/             # JSON Schema + receipt-hash validators
     cli.py                  # run-sandbox, replay, verify-receipts, morning-report
-  tests/                    # pytest suite for Slices 01-17
+  tests/                    # pytest suite for Slices 01-18
   sandbox/
     workspaces/             # copied repo workspaces
     runs/                   # per-run sandbox_run.json + stdout/stderr
@@ -96,7 +98,7 @@ failureforge/
     verify_receipts.sh
 ```
 
-DataForge Local owns the operator API and persistence-facing Slice 04-17
+DataForge Local owns the operator API and persistence-facing Slice 04-18
 integration under `dataforge-Local/app/failureforge/`.
 
 ## Demo

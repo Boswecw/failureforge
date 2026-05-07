@@ -4,26 +4,27 @@ rootdir: /home/charlie/Forge/ecosystem/failureforge
 configfile: pyproject.toml
 testpaths: tests
 plugins: hypothesis-6.151.10, cov-7.1.0, anyio-4.2.0
-collected 85 items
+collected 86 items
 
-tests/test_slice_01_contracts_and_sandbox.py ......                      [  7%]
+tests/test_slice_01_contracts_and_sandbox.py ......                      [  6%]
 tests/test_slice_02_validation_gate.py .....                             [ 12%]
 tests/test_slice_03_ranking.py ....                                      [ 17%]
-tests/test_slice_04_persistence_push.py ...                              [ 21%]
-tests/test_slice_05_operator_cli.py .....                                [ 27%]
+tests/test_slice_04_persistence_push.py ...                              [ 20%]
+tests/test_slice_05_operator_cli.py .....                                [ 26%]
 tests/test_slice_06_promotion_handshake.py ...                           [ 30%]
-tests/test_slice_07_multi_agent.py ..........                            [ 42%]
+tests/test_slice_07_multi_agent.py ..........                            [ 41%]
 tests/test_slice_08_clustering.py .......                                [ 50%]
-tests/test_slice_09_adjudication.py .....                                [ 56%]
-tests/test_slice_10_bridge_contracts.py .......                          [ 64%]
-tests/test_slice_10_governance_reconciliation.py ......                  [ 71%]
-tests/test_slice_11_target_adapters.py ........                          [ 81%]
-tests/test_slice_12_external_target_source.py .....                      [ 87%]
-tests/test_slice_13_adapter_preflight.py ...                             [ 90%]
-tests/test_slice_14_adapter_replay.py ...                                [ 94%]
-tests/test_slice_15_replay_command_context.py ..                         [ 96%]
-tests/test_slice_16_canonical_source_fingerprint.py ..                   [ 98%]
-tests/test_slice_17_fail_closed_canonical_mutation.py .                  [100%]
+tests/test_slice_09_adjudication.py .....                                [ 55%]
+tests/test_slice_10_bridge_contracts.py .......                          [ 63%]
+tests/test_slice_10_governance_reconciliation.py ......                  [ 70%]
+tests/test_slice_11_target_adapters.py ........                          [ 80%]
+tests/test_slice_12_external_target_source.py .....                      [ 86%]
+tests/test_slice_13_adapter_preflight.py ...                             [ 89%]
+tests/test_slice_14_adapter_replay.py ...                                [ 93%]
+tests/test_slice_15_replay_command_context.py ..                         [ 95%]
+tests/test_slice_16_canonical_source_fingerprint.py ..                   [ 97%]
+tests/test_slice_17_fail_closed_canonical_mutation.py .                  [ 98%]
+tests/test_slice_18_cli_canonical_mutation_exit.py .                     [100%]
 
 =============================== warnings summary ===============================
 tests/test_slice_01_contracts_and_sandbox.py: 68 warnings
@@ -48,4 +49,4 @@ tests/test_slice_17_fail_closed_canonical_mutation.py: 4 warnings
     return jsonschema.RefResolver(base_uri=base_uri, referrer=schema, store=store)
 
 -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
-======================= 85 passed, 933 warnings in 1.85s =======================
+======================= 86 passed, 933 warnings in 1.78s =======================

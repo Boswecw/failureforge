@@ -1,6 +1,6 @@
 # FFGSYSTEM
 
-Generated from doc/system on 2026-05-07T04:40:57Z.
+Generated from doc/system on 2026-05-07T04:46:38Z.
 
 # 00 Purpose
 
@@ -41,6 +41,7 @@ The current implementation includes:
 - Replay command context capture for adapter-backed target-source receipts.
 - Per-run canonical source fingerprinting in `SandboxRun.v1`.
 - Fail-closed canonical mutation handling before receipt files are accepted.
+- CLI canonical mutation failures return exit code `5`.
 
 # 20 Contracts
 
@@ -120,6 +121,7 @@ It writes evidence under `reports/failureforge-verification/latest/` and runs:
 - replay command context tests for adapter-backed receipts
 - canonical source fingerprint tests
 - fail-closed canonical mutation tests
+- CLI canonical mutation exit tests
 - documentation assembly
 
 Supporting commands:
