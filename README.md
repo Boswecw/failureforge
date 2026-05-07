@@ -1,8 +1,9 @@
 # FailureForge
 
-Sandbox-only failure-harvesting subsystem. Per the
+Sandbox-only failure-harvesting subsystem and read-only governance evidence
+bridge for Forge. Per the
 `docs/plans/failureforge_repo_reconciled_plan_set` plan, this directory
-implements Slices 01-09:
+implements Slices 01-12:
 
 - **Slice 01** - `FailureCase.v1`, `FailureHarvestReceipt.v1`, `SandboxRun.v1`,
   `HardeningReport.v1` contracts, Edge-Case Agent, sandbox run script, replay
@@ -21,6 +22,12 @@ implements Slices 01-09:
 - **Slice 08** - Centipede root-cause clustering and ranked fix-cluster reports.
 - **Slice 09** - NeuroForge comparative adjudication with model receipts and a
   deterministic final classification rule.
+- **Slice 10** - Governance reconciliation, ERA/AAR read-only bridge
+  contracts, and local proof gates.
+- **Slice 11** - Target adapter guard contract for explicit, copy-only
+  expansion beyond demo targets.
+- **Slice 12** - External target source gate requiring a validated adapter
+  before probing any non-default source path.
 
 ## Doctrine
 
@@ -36,6 +43,12 @@ implements Slices 01-09:
   evidence into a single opaque result.
 - NeuroForge provider votes can confirm or dispute a cluster, but final
   classification stays derived from deterministic cluster evidence.
+- ERA exports and AAR seeds are read-only bridge artifacts; they cannot claim
+  fixes, bypass operator review, or mark evidence safe to autofix.
+- Target adapters declare supported attack families and canonical mutation
+  guards before a non-demo target can be probed.
+- Explicit target source paths require target adapters; the demo target path
+  remains the only adapter-optional execution route.
 
 ## Layout
 
@@ -47,12 +60,14 @@ failureforge/
     agents/                 # edge_case, chaos, mutation, reproduction, classification
     adjudication/           # Slice 09 NeuroForge provider comparison
     clustering/centipede.py # Slice 08 root-cause clustering
+    integrations/           # Slice 10 ERA export + AAR seed builders
+    runtime/target_adapter.py # Slice 11 target adapter guard
     runtime/sandbox.py      # SandboxRunner: copies workspace, runs lanes, writes receipts
     runtime/replay.py       # Replay helper used by replay_failure.sh
     reporting/scorer.py     # Slice 03 ranking + HardeningReport generator
     validation/             # JSON Schema + receipt-hash validators
     cli.py                  # run-sandbox, replay, verify-receipts, morning-report
-  tests/                    # pytest suite for Slices 01-09
+  tests/                    # pytest suite for Slices 01-12
   sandbox/
     workspaces/             # copied repo workspaces
     runs/                   # per-run sandbox_run.json + stdout/stderr
@@ -66,7 +81,7 @@ failureforge/
     verify_receipts.sh
 ```
 
-DataForge Local owns the operator API and persistence-facing Slice 04-09
+DataForge Local owns the operator API and persistence-facing Slice 04-12
 integration under `dataforge-Local/app/failureforge/`.
 
 ## Demo

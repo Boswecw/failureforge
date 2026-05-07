@@ -1,0 +1,29 @@
+{
+  "schema_version": "FailureForgeAARSeed.v1",
+  "aar_seed_id": "AARS-demo-001",
+  "target_repo": "example-repo",
+  "source_ref": "local",
+  "sandbox_run_id": "SR-demo-001",
+  "cluster_id": "RC-demo-001",
+  "failure_summary": "Duplicate replay created duplicate canonical state.",
+  "what_failed": "The idempotency invariant for duplicate input failed.",
+  "expected_result": "Existing result reused or duplicate rejected.",
+  "actual_result_summary": "Duplicate input created a new record.",
+  "evidence_receipts": ["FHR-demo-001"],
+  "replay_commands": ["./scripts/replay_failure.sh sandbox/receipts/FHR-demo-001.json"],
+  "deterministic_status": "reproducible",
+  "source_disagreement": {
+    "preserved": true,
+    "severity_distribution": {"critical": 1},
+    "actual_result_distribution": {"Duplicate input created a new record.": 1},
+    "model_adjudication_status": "confirmed"
+  },
+  "operator_review_required": true,
+  "initial_lesson_hypothesis": "The target needs an explicit idempotency gate at the registry boundary.",
+  "recommended_next_checks": [
+    "Which contract should have rejected duplicate replay?",
+    "Does this need a regression gate?",
+    "Was the failure detected by more than one lane?"
+  ],
+  "created_at": "2026-05-06T17:34:26Z"
+}

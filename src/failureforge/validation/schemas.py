@@ -100,3 +100,19 @@ def validate_model_adjudication_receipt(doc: dict[str, Any]) -> None:
 
 def validate_neuroforge_adjudication_report(doc: dict[str, Any]) -> None:
     _validate("NeuroForgeAdjudicationReport.v1.schema.json", doc)
+
+
+def validate_failure_score_v2(doc: dict[str, Any]) -> None:
+    _validate("FailureScore.v2.schema.json", doc)
+
+
+def validate_failureforge_to_era_export(doc: dict[str, Any]) -> None:
+    _validate("FailureForgeToERAExport.v1.schema.json", doc)
+
+
+def validate_failureforge_aar_seed(doc: dict[str, Any]) -> None:
+    _validate("FailureForgeAARSeed.v1.schema.json", doc)
+
+
+def validate_target_adapter(doc: dict[str, Any]) -> None:
+    _validate("TargetAdapter.v1.schema.json", doc)

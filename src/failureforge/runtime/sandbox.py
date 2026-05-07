@@ -24,6 +24,10 @@ from pathlib import Path
 from typing import Any, Iterable
 
 from failureforge.agents.edge_case import EdgeCaseAgent, FailureCaseSpec
+from failureforge.runtime.target_adapter import (
+    ensure_attack_family_supported,
+    validate_target_adapter_for_source,
+)
 from failureforge.runtime.target_loader import load_registry_module
 from failureforge.validation import (
     apply_receipt_hash,
@@ -236,11 +240,13 @@ class SandboxRunner:
         target_repo_name: str,
         target_repo_source: Path,
         source_ref: str = "local",
+        target_adapter: dict[str, Any] | None = None,
     ) -> None:
         self._sandbox_root = sandbox_root.resolve()
         self._target_repo_name = target_repo_name
         self._target_repo_source = target_repo_source.resolve()
         self._source_ref = source_ref
+        self._target_adapter = target_adapter
 
         if not self._target_repo_source.exists():
             raise FileNotFoundError(
@@ -254,6 +260,12 @@ class SandboxRunner:
         else:
             raise ValueError(
                 "refusing to use a target inside the sandbox tree as the canonical source"
+            )
+        if self._target_adapter is not None:
+            validate_target_adapter_for_source(
+                self._target_adapter,
+                target_repo_source=self._target_repo_source,
+                sandbox_root=self._sandbox_root,
             )
 
     def run(
@@ -275,15 +287,16 @@ class SandboxRunner:
         run_id = sandbox_run_id or _stable_id(
             "SR", self._target_repo_name, _utc_now(), str(id(self))
         )
+        if agents is None:
+            agents = [agent or EdgeCaseAgent(target_repo=self._target_repo_name)]
+        self._preflight_agent_catalogs(agents)
+
         paths = SandboxPaths.for_run(
             sandbox_root=self._sandbox_root,
             sandbox_run_id=run_id,
             target_repo=self._target_repo_name,
         )
         self._copy_workspace(paths.workspace)
-
-        if agents is None:
-            agents = [agent or EdgeCaseAgent(target_repo=self._target_repo_name)]
         lanes = sorted({getattr(a, "lane", "edge_case") for a in agents})
 
         sandbox_run = {
@@ -311,6 +324,10 @@ class SandboxRunner:
             lane = getattr(agent_obj, "lane", "edge_case")
             outcomes = self._invoke_agent(agent_obj, paths.workspace)
             for outcome in outcomes:
+                if self._target_adapter is not None:
+                    ensure_attack_family_supported(
+                        self._target_adapter, outcome.failure_case.attack_type
+                    )
                 # Re-tag the failure case to the agent's lane in case it was
                 # left as the default.
                 outcome.failure_case.agent_lane = lane
@@ -348,6 +365,15 @@ class SandboxRunner:
         for spec in agent_obj.generate_default_catalog():
             outcomes.append(run_attack_against_target(workspace=workspace, case=spec))
         return outcomes
+
+    def _preflight_agent_catalogs(self, agents: list[Any]) -> None:
+        if self._target_adapter is None:
+            return
+        for agent_obj in agents:
+            if not hasattr(agent_obj, "generate_default_catalog"):
+                continue
+            for spec in agent_obj.generate_default_catalog():
+                ensure_attack_family_supported(self._target_adapter, spec.attack_type)
 
     # ---- internals ----
 

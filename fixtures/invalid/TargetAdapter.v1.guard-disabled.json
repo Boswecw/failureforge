@@ -1,0 +1,26 @@
+{
+  "schema_version": "TargetAdapter.v1",
+  "adapter_id": "TA-example-repo",
+  "target_repo": "example-repo",
+  "supported_attack_families": ["duplicate_replay"],
+  "read_only_checks": {
+    "canonical_source_outside_sandbox": true,
+    "forbidden_paths_checked": true,
+    "no_direct_patch_commands": true
+  },
+  "workspace_copy_strategy": "copytree",
+  "required_commands": ["python3"],
+  "forbidden_paths": [".git", ".env"],
+  "artifact_capture_rules": {
+    "allowed_roots": ["sandbox/runs", "sandbox/receipts", "sandbox/reports"],
+    "capture_stdout_stderr": true,
+    "capture_receipts": true,
+    "capture_reports": true
+  },
+  "canonical_mutation_guard": {
+    "enabled": false,
+    "strategy": "pre_post_tree_hash",
+    "verification_script": "scripts/verify_no_canonical_mutation.sh"
+  },
+  "created_at": "2026-05-07T00:00:00Z"
+}

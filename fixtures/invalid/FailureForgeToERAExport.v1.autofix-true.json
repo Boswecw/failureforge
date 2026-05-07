@@ -1,0 +1,41 @@
+{
+  "schema_version": "FailureForgeToERAExport.v1",
+  "export_id": "FFE-demo-001",
+  "target_repo": "example-repo",
+  "source_ref": "local",
+  "sandbox_run_id": "SR-demo-001",
+  "hardening_report_id": "HR-demo-001",
+  "included_receipts": ["FHR-demo-001"],
+  "included_clusters": ["RC-demo-001"],
+  "ranked_findings": [
+    {
+      "rank": 1,
+      "classification": "duplicate_replay",
+      "severity": "critical",
+      "receipts": ["FHR-demo-001"]
+    }
+  ],
+  "era_candidate_findings": [
+    {
+      "candidate_id": "ERA-FC-demo-accuracy-001",
+      "era_lane": "accuracy",
+      "source_classification": "duplicate_replay",
+      "source_receipts": ["FHR-demo-001"],
+      "finding_summary": "Duplicate replay broke the idempotency contract.",
+      "requires_operator_review": true,
+      "safe_to_autofix": true,
+      "claims_fix": false
+    }
+  ],
+  "read_only_invariant_status": {
+    "safe_to_autofix": true,
+    "requires_operator_review": true,
+    "claims_fix": false,
+    "preserves_failureforge_classification": true,
+    "model_adjudication_is_advisory": true
+  },
+  "artifact_hashes": {
+    "hardening_report": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+  },
+  "created_at": "2026-05-06T17:34:26Z"
+}

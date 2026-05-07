@@ -1,0 +1,22 @@
+# 40 Verification Gates
+
+The local proof gate is `bash scripts/ci_gate.sh`.
+
+It writes evidence under `reports/failureforge-verification/latest/` and runs:
+
+- dependency import check
+- `python3 -m pytest`
+- sandbox demo run
+- receipt schema/hash verification
+- deterministic replay
+- no-canonical-mutation verification
+- target adapter schema and preflight tests
+- external target-source adapter requirement tests
+- documentation assembly
+
+Supporting commands:
+
+- `bash scripts/verify_receipts.sh`
+- `bash scripts/replay_failure.sh sandbox/receipts/<receipt>.json`
+- `bash scripts/verify_no_canonical_mutation.sh`
+- `bash doc/system/BUILD.sh`

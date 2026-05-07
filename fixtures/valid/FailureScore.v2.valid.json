@@ -1,0 +1,23 @@
+{
+  "schema_version": "FailureScore.v2",
+  "score_id": "FS-demo-001",
+  "target_repo": "example-repo",
+  "source_artifact_type": "root_cause_cluster",
+  "source_artifact_id": "RC-demo-001",
+  "base_hardening_score": 96,
+  "severity_weight": 40,
+  "reproducibility_weight": 20,
+  "blast_radius_weight": 10,
+  "frequency_weight": 4,
+  "lane_agreement_weight": 15,
+  "fix_complexity_penalty": 3,
+  "unknownness_weight": 6,
+  "coverage_gap_weight": 8,
+  "novelty_weight": 5,
+  "recovery_strength_penalty": 2,
+  "execution_cost_penalty": 1,
+  "final_score": 102,
+  "score_formula": "severity + reproducibility + blast_radius + frequency + lane_agreement + unknownness + coverage_gap + novelty - fix_complexity - recovery_strength - execution_cost",
+  "score_inputs_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "created_at": "2026-05-06T17:34:26Z"
+}

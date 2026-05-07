@@ -1,0 +1,107 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "FailureForgeToERAExport.v1",
+  "description": "Read-only bridge artifact that lets ERA consume FailureForge evidence without importing FailureForge internals or acquiring repair authority.",
+  "x-contract-governance": {
+    "local_authority": "failureforge",
+    "future_authority": "forge-contract-core",
+    "promotion_status": "draft"
+  },
+  "type": "object",
+  "required": [
+    "schema_version",
+    "export_id",
+    "target_repo",
+    "source_ref",
+    "sandbox_run_id",
+    "hardening_report_id",
+    "included_receipts",
+    "included_clusters",
+    "ranked_findings",
+    "era_candidate_findings",
+    "read_only_invariant_status",
+    "artifact_hashes",
+    "created_at"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {"type": "string", "const": "FailureForgeToERAExport.v1"},
+    "export_id": {"type": "string", "pattern": "^FFE-[A-Za-z0-9_\\-]+$"},
+    "target_repo": {"type": "string", "minLength": 1, "maxLength": 256},
+    "source_ref": {"type": "string", "minLength": 1, "maxLength": 256},
+    "sandbox_run_id": {"type": "string", "pattern": "^SR-[A-Za-z0-9_\\-]+$"},
+    "hardening_report_id": {"type": "string", "pattern": "^HR-[A-Za-z0-9_\\-]+$"},
+    "included_receipts": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"type": "string", "pattern": "^FHR-[A-Za-z0-9_\\-]+$"}
+    },
+    "included_clusters": {
+      "type": "array",
+      "items": {"type": "string", "pattern": "^RC-[A-Za-z0-9_\\-]+$"}
+    },
+    "ranked_findings": {
+      "type": "array",
+      "items": {"type": "object"}
+    },
+    "era_candidate_findings": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "candidate_id",
+          "era_lane",
+          "source_classification",
+          "source_receipts",
+          "finding_summary",
+          "requires_operator_review",
+          "safe_to_autofix",
+          "claims_fix"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "candidate_id": {"type": "string", "pattern": "^ERA-FC-[A-Za-z0-9_\\-]+$"},
+          "era_lane": {
+            "type": "string",
+            "enum": ["accuracy", "redundancy", "efficiency", "cross_lane"]
+          },
+          "source_classification": {"type": "string", "minLength": 1, "maxLength": 128},
+          "source_receipts": {
+            "type": "array",
+            "minItems": 1,
+            "items": {"type": "string", "pattern": "^FHR-[A-Za-z0-9_\\-]+$"}
+          },
+          "finding_summary": {"type": "string", "minLength": 1, "maxLength": 4096},
+          "requires_operator_review": {"type": "boolean", "const": true},
+          "safe_to_autofix": {"type": "boolean", "const": false},
+          "claims_fix": {"type": "boolean", "const": false}
+        }
+      }
+    },
+    "read_only_invariant_status": {
+      "type": "object",
+      "required": [
+        "safe_to_autofix",
+        "requires_operator_review",
+        "claims_fix",
+        "preserves_failureforge_classification",
+        "model_adjudication_is_advisory"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "safe_to_autofix": {"type": "boolean", "const": false},
+        "requires_operator_review": {"type": "boolean", "const": true},
+        "claims_fix": {"type": "boolean", "const": false},
+        "preserves_failureforge_classification": {"type": "boolean", "const": true},
+        "model_adjudication_is_advisory": {"type": "boolean", "const": true}
+      }
+    },
+    "artifact_hashes": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+    },
+    "created_at": {"type": "string", "format": "date-time"}
+  }
+}

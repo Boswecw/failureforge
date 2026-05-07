@@ -10,6 +10,10 @@ from failureforge.validation.schemas import (
     validate_fix_cluster_report,
     validate_model_adjudication_receipt,
     validate_neuroforge_adjudication_report,
+    validate_failure_score_v2,
+    validate_failureforge_to_era_export,
+    validate_failureforge_aar_seed,
+    validate_target_adapter,
 )
 from failureforge.validation.hashing import (
     compute_receipt_hash,
@@ -42,6 +46,10 @@ __all__ = [
     "validate_fix_cluster_report",
     "validate_model_adjudication_receipt",
     "validate_neuroforge_adjudication_report",
+    "validate_failure_score_v2",
+    "validate_failureforge_to_era_export",
+    "validate_failureforge_aar_seed",
+    "validate_target_adapter",
     "compute_receipt_hash",
     "apply_receipt_hash",
     "verify_receipt_hash",

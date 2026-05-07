@@ -1,0 +1,68 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "FailureScore.v2",
+  "description": "Governance-aware failure scoring artifact. It is read-only evidence and carries no repair authority.",
+  "x-contract-governance": {
+    "local_authority": "failureforge",
+    "future_authority": "forge-contract-core",
+    "promotion_status": "draft"
+  },
+  "type": "object",
+  "required": [
+    "schema_version",
+    "score_id",
+    "target_repo",
+    "source_artifact_type",
+    "source_artifact_id",
+    "base_hardening_score",
+    "severity_weight",
+    "reproducibility_weight",
+    "blast_radius_weight",
+    "frequency_weight",
+    "lane_agreement_weight",
+    "fix_complexity_penalty",
+    "unknownness_weight",
+    "coverage_gap_weight",
+    "novelty_weight",
+    "recovery_strength_penalty",
+    "execution_cost_penalty",
+    "final_score",
+    "score_formula",
+    "score_inputs_hash",
+    "created_at"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {"type": "string", "const": "FailureScore.v2"},
+    "score_id": {"type": "string", "pattern": "^FS-[A-Za-z0-9_\\-]+$"},
+    "target_repo": {"type": "string", "minLength": 1, "maxLength": 256},
+    "source_artifact_type": {
+      "type": "string",
+      "enum": [
+        "failure_receipt",
+        "hardening_report",
+        "root_cause_cluster",
+        "fix_cluster_report",
+        "era_export",
+        "aar_seed"
+      ]
+    },
+    "source_artifact_id": {"type": "string", "minLength": 1, "maxLength": 256},
+    "base_hardening_score": {"type": "number"},
+    "severity_weight": {"type": "number"},
+    "reproducibility_weight": {"type": "number"},
+    "blast_radius_weight": {"type": "number"},
+    "frequency_weight": {"type": "number"},
+    "lane_agreement_weight": {"type": "number"},
+    "fix_complexity_penalty": {"type": "number", "minimum": 0},
+    "unknownness_weight": {"type": "number"},
+    "coverage_gap_weight": {"type": "number"},
+    "novelty_weight": {"type": "number"},
+    "recovery_strength_penalty": {"type": "number", "minimum": 0},
+    "execution_cost_penalty": {"type": "number", "minimum": 0},
+    "final_score": {"type": "number"},
+    "score_formula": {"type": "string", "minLength": 1, "maxLength": 2048},
+    "score_inputs_hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "created_at": {"type": "string", "format": "date-time"}
+  }
+}

@@ -1,7 +1,8 @@
 """FailureForge — sandbox-only failure-harvesting subsystem.
 
-Implements Slices 01–03 of the
-`docs/plans/failureforge_repo_reconciled_plan_set` plan.
+Implements the local FailureForge slice family through Slice 12: controlled
+failure probes, immutable evidence, replay, reporting, clustering, advisory
+adjudication, read-only governance bridge artifacts, and target adapter guards.
 """
 
 __all__ = []

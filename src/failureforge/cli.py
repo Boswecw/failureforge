@@ -17,6 +17,7 @@ from failureforge.forgecommand import (
 )
 from failureforge.runtime.replay import replay_receipt
 from failureforge.runtime.sandbox import SandboxRunner
+from failureforge.runtime.target_adapter import load_target_adapter
 from failureforge.reporting.scorer import (
     build_hardening_report,
     load_and_verify_receipts,
@@ -34,15 +35,52 @@ def _failureforge_root() -> Path:
     return Path(__file__).resolve().parents[2]
 
 
+def _load_run_target(
+    *,
+    root: Path,
+    target: str,
+    target_source_arg: str | None,
+    adapter_arg: str | None,
+) -> tuple[Path, dict | None]:
+    if target_source_arg is not None and adapter_arg is None:
+        raise ValueError("--target-source requires --adapter")
+
+    if target_source_arg is None:
+        target_source = root / "sandbox-targets" / target
+    else:
+        target_source = Path(target_source_arg)
+        if not target_source.is_absolute():
+            target_source = root / target_source
+
+    adapter = None
+    if adapter_arg is not None:
+        adapter_path = Path(adapter_arg)
+        if not adapter_path.is_absolute():
+            adapter_path = root / adapter_path
+        adapter = load_target_adapter(adapter_path)
+
+    return target_source.resolve(), adapter
+
+
 def cmd_run_sandbox(args: argparse.Namespace) -> int:
     root = _failureforge_root()
     sandbox_root = root / "sandbox"
-    target_source = (root / "sandbox-targets" / args.target).resolve()
+    try:
+        target_source, adapter = _load_run_target(
+            root=root,
+            target=args.target,
+            target_source_arg=args.target_source,
+            adapter_arg=args.adapter,
+        )
+    except ValueError as exc:
+        print(str(exc), file=sys.stderr)
+        return 2
     runner = SandboxRunner(
         sandbox_root=sandbox_root,
         target_repo_name=args.target,
         target_repo_source=target_source,
         source_ref=args.source_ref,
+        target_adapter=adapter,
     )
     result = runner.run(sandbox_run_id=args.run_id)
     receipts = load_and_verify_receipts(sandbox_root / "receipts")
@@ -160,6 +198,12 @@ def main(argv: list[str] | None = None) -> int:
     p_run.add_argument("--target", required=True)
     p_run.add_argument("--source-ref", default="local")
     p_run.add_argument("--run-id", default=None)
+    p_run.add_argument("--adapter", default=None, help="TargetAdapter.v1 JSON path")
+    p_run.add_argument(
+        "--target-source",
+        default=None,
+        help="canonical target source path; requires --adapter",
+    )
     p_run.set_defaults(func=cmd_run_sandbox)
 
     p_replay = sub.add_parser("replay", help="re-run an attack from a FailureHarvestReceipt")

@@ -1,0 +1,77 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "FailureForgeAARSeed.v1",
+  "description": "Read-only AAR seed generated from verified FailureForge evidence. It is not an AAR conclusion and it carries no repair authority.",
+  "x-contract-governance": {
+    "local_authority": "failureforge",
+    "future_authority": "forge-contract-core",
+    "promotion_status": "draft"
+  },
+  "type": "object",
+  "required": [
+    "schema_version",
+    "aar_seed_id",
+    "target_repo",
+    "source_ref",
+    "sandbox_run_id",
+    "cluster_id",
+    "failure_summary",
+    "what_failed",
+    "expected_result",
+    "actual_result_summary",
+    "evidence_receipts",
+    "replay_commands",
+    "deterministic_status",
+    "source_disagreement",
+    "operator_review_required",
+    "initial_lesson_hypothesis",
+    "recommended_next_checks",
+    "created_at"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {"type": "string", "const": "FailureForgeAARSeed.v1"},
+    "aar_seed_id": {"type": "string", "pattern": "^AARS-[A-Za-z0-9_\\-]+$"},
+    "target_repo": {"type": "string", "minLength": 1, "maxLength": 256},
+    "source_ref": {"type": "string", "minLength": 1, "maxLength": 256},
+    "sandbox_run_id": {"type": "string", "pattern": "^SR-[A-Za-z0-9_\\-]+$"},
+    "cluster_id": {"type": "string", "pattern": "^RC-[A-Za-z0-9_\\-]+$"},
+    "failure_summary": {"type": "string", "minLength": 1, "maxLength": 4096},
+    "what_failed": {"type": "string", "minLength": 1, "maxLength": 4096},
+    "expected_result": {"type": "string", "minLength": 1, "maxLength": 4096},
+    "actual_result_summary": {"type": "string", "minLength": 1, "maxLength": 4096},
+    "evidence_receipts": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"type": "string", "pattern": "^FHR-[A-Za-z0-9_\\-]+$"}
+    },
+    "replay_commands": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"type": "string", "minLength": 1, "maxLength": 1024}
+    },
+    "deterministic_status": {
+      "type": "string",
+      "enum": ["reproducible", "not_reproducible", "mixed", "unknown"]
+    },
+    "source_disagreement": {
+      "type": "object",
+      "required": ["preserved", "severity_distribution", "actual_result_distribution"],
+      "additionalProperties": false,
+      "properties": {
+        "preserved": {"type": "boolean", "const": true},
+        "severity_distribution": {"type": "object"},
+        "actual_result_distribution": {"type": "object"},
+        "model_adjudication_status": {"type": "string"}
+      }
+    },
+    "operator_review_required": {"type": "boolean", "const": true},
+    "initial_lesson_hypothesis": {"type": "string", "minLength": 1, "maxLength": 4096},
+    "recommended_next_checks": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"type": "string", "minLength": 1, "maxLength": 1024}
+    },
+    "created_at": {"type": "string", "format": "date-time"}
+  }
+}

@@ -1,0 +1,124 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "TargetAdapter.v1",
+  "description": "A read-only adapter contract that declares how FailureForge may copy and probe one target repository without mutating the canonical source.",
+  "x-contract-governance": {
+    "local_authority": "failureforge",
+    "future_authority": "forge-contract-core",
+    "promotion_status": "draft"
+  },
+  "type": "object",
+  "required": [
+    "schema_version",
+    "adapter_id",
+    "target_repo",
+    "supported_attack_families",
+    "read_only_checks",
+    "workspace_copy_strategy",
+    "required_commands",
+    "forbidden_paths",
+    "artifact_capture_rules",
+    "canonical_mutation_guard",
+    "created_at"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {"type": "string", "const": "TargetAdapter.v1"},
+    "adapter_id": {"type": "string", "pattern": "^TA-[A-Za-z0-9_\\-]+$"},
+    "target_repo": {"type": "string", "minLength": 1, "maxLength": 256},
+    "supported_attack_families": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "enum": [
+          "state_failure",
+          "duplicate_replay",
+          "missing_field",
+          "unknown_enum",
+          "bad_path",
+          "bad_unicode",
+          "malformed_input",
+          "boundary"
+        ]
+      }
+    },
+    "read_only_checks": {
+      "type": "object",
+      "required": [
+        "canonical_source_outside_sandbox",
+        "forbidden_paths_checked",
+        "no_direct_patch_commands"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "canonical_source_outside_sandbox": {"type": "boolean", "const": true},
+        "forbidden_paths_checked": {"type": "boolean", "const": true},
+        "no_direct_patch_commands": {"type": "boolean", "const": true}
+      }
+    },
+    "workspace_copy_strategy": {
+      "type": "string",
+      "enum": ["copytree"]
+    },
+    "required_commands": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1, "maxLength": 256}
+    },
+    "forbidden_paths": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 512,
+        "pattern": "^(?!/)(?!.*(^|/)\\.\\.(/|$)).+"
+      }
+    },
+    "artifact_capture_rules": {
+      "type": "object",
+      "required": [
+        "allowed_roots",
+        "capture_stdout_stderr",
+        "capture_receipts",
+        "capture_reports"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "allowed_roots": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "enum": [
+              "sandbox/runs",
+              "sandbox/receipts",
+              "sandbox/reports",
+              "sandbox/exports"
+            ]
+          }
+        },
+        "capture_stdout_stderr": {"type": "boolean", "const": true},
+        "capture_receipts": {"type": "boolean", "const": true},
+        "capture_reports": {"type": "boolean", "const": true}
+      }
+    },
+    "canonical_mutation_guard": {
+      "type": "object",
+      "required": ["enabled", "strategy", "verification_script"],
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {"type": "boolean", "const": true},
+        "strategy": {"type": "string", "enum": ["pre_post_tree_hash"]},
+        "verification_script": {
+          "type": "string",
+          "const": "scripts/verify_no_canonical_mutation.sh"
+        }
+      }
+    },
+    "created_at": {"type": "string", "format": "date-time"}
+  }
+}
