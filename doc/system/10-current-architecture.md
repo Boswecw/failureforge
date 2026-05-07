@@ -26,3 +26,4 @@ The current implementation includes:
 - Per-run canonical source fingerprinting in `SandboxRun.v1`.
 - Fail-closed canonical mutation handling before receipt files are accepted.
 - CLI canonical mutation failures return exit code `5`.
+- Replay canonical mutation failures return exit code `5` without replay JSON.

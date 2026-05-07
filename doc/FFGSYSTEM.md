@@ -1,6 +1,6 @@
 # FFGSYSTEM
 
-Generated from doc/system on 2026-05-07T04:46:38Z.
+Generated from doc/system on 2026-05-07T08:59:53Z.
 
 # 00 Purpose
 
@@ -42,6 +42,7 @@ The current implementation includes:
 - Per-run canonical source fingerprinting in `SandboxRun.v1`.
 - Fail-closed canonical mutation handling before receipt files are accepted.
 - CLI canonical mutation failures return exit code `5`.
+- Replay canonical mutation failures return exit code `5` without replay JSON.
 
 # 20 Contracts
 
@@ -122,6 +123,7 @@ It writes evidence under `reports/failureforge-verification/latest/` and runs:
 - canonical source fingerprint tests
 - fail-closed canonical mutation tests
 - CLI canonical mutation exit tests
+- CLI replay canonical mutation exit tests
 - documentation assembly
 
 Supporting commands:

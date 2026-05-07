@@ -124,12 +124,16 @@ def cmd_replay(args: argparse.Namespace) -> int:
     except ValueError as exc:
         print(str(exc), file=sys.stderr)
         return 2
-    result = replay_receipt(
-        receipt_path=receipt_path,
-        sandbox_root=sandbox_root,
-        target_repo_source=target_source,
-        target_adapter=adapter,
-    )
+    try:
+        result = replay_receipt(
+            receipt_path=receipt_path,
+            sandbox_root=sandbox_root,
+            target_repo_source=target_source,
+            target_adapter=adapter,
+        )
+    except CanonicalSourceMutationError as exc:
+        print(str(exc), file=sys.stderr)
+        return 5
     print(json.dumps(result.__dict__, indent=2))
     return 0 if result.matches_original else 2
 
