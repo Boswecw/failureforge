@@ -23,6 +23,7 @@ It writes evidence under `reports/failureforge-verification/latest/` and runs:
 - replay mismatch artifact status tests
 - CLI replay receipt validation tests
 - verify-receipts malformed JSON tests
+- CLI adapter load validation tests
 - documentation assembly
 
 Supporting commands:

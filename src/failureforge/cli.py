@@ -57,7 +57,10 @@ def _load_run_target(
         adapter_path = Path(adapter_arg)
         if not adapter_path.is_absolute():
             adapter_path = root / adapter_path
-        adapter = load_target_adapter(adapter_path)
+        try:
+            adapter = load_target_adapter(adapter_path)
+        except (OSError, json.JSONDecodeError, SchemaValidationError) as exc:
+            raise ValueError(f"invalid target adapter {adapter_path}: {exc}") from exc
 
     return target_source.resolve(), adapter
 
