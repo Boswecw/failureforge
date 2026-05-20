@@ -136,7 +136,9 @@ def test_final_classification_stays_deterministic_when_providers_dispute_cluster
     assert report["operator_review_required"] is True
     assert report["summary"]["cluster_disputed_by_provider_consensus"] is True
     assert report["final_classification"] == "duplicate_replay"
-    assert report["deterministic_rule"] == "cluster_evidence_wins_over_provider_votes_v1"
+    assert (
+        report["deterministic_rule"] == "cluster_evidence_wins_over_provider_votes_v1"
+    )
 
 
 def test_provider_disagreement_is_preserved_without_changing_final_classification():
@@ -192,7 +194,9 @@ def test_full_lane_cluster_can_be_neuroforge_adjudicated(tmp_path: Path):
     ]
     result = runner.run(agents=agents, sandbox_run_id="SR-adjudication-e2e")
     receipts = [json.loads(Path(p).read_text()) for p in result["receipt_paths"]]
-    cluster = next(c for c in build_clusters(receipts) if c["classification"] == "duplicate_replay")
+    cluster = next(
+        c for c in build_clusters(receipts) if c["classification"] == "duplicate_replay"
+    )
 
     report = run_provider_comparison_job(
         cluster=cluster,

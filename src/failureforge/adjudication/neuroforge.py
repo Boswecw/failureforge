@@ -72,7 +72,9 @@ def _normalise_verdict(verdict: dict[str, Any]) -> dict[str, Any]:
     }
     missing = sorted(required - set(verdict))
     if missing:
-        raise ValueError(f"provider verdict missing required field(s): {', '.join(missing)}")
+        raise ValueError(
+            f"provider verdict missing required field(s): {', '.join(missing)}"
+        )
 
     classification = str(verdict["proposed_classification"])
     if classification not in _CLASSIFICATIONS:
@@ -163,7 +165,9 @@ def _consensus(values: Iterable[str]) -> str:
 
 def _job_id_for(cluster: dict[str, Any], verdicts: list[dict[str, Any]]) -> str:
     hashes = sorted(provider_result_hash(v) for v in verdicts)
-    return _stable_id("NFJ", cluster["cluster_id"], cluster["cluster_fingerprint"], *hashes)
+    return _stable_id(
+        "NFJ", cluster["cluster_id"], cluster["cluster_fingerprint"], *hashes
+    )
 
 
 def run_provider_comparison_job(

@@ -230,7 +230,9 @@ def render_fix_cluster_markdown(report: dict[str, Any]) -> str:
     ]
     if "top_severity" in report["summary"]:
         lines.append(f"- Top severity: {report['summary']['top_severity']}")
-        lines.append(f"- Top recommended fix: {report['summary']['top_recommended_fix']}")
+        lines.append(
+            f"- Top recommended fix: {report['summary']['top_recommended_fix']}"
+        )
     lines.extend(["", "## Clusters", ""])
     for c in report["clusters"]:
         lines.append(

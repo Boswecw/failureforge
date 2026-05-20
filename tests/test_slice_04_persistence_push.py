@@ -48,7 +48,9 @@ def client(app: FastAPI) -> DataForgeFailureForgeClient:
     return DataForgeFailureForgeClient(http_client=TestClient(app))
 
 
-def test_full_run_bundle_push_round_trip(tmp_path: Path, client: DataForgeFailureForgeClient, app: FastAPI):
+def test_full_run_bundle_push_round_trip(
+    tmp_path: Path, client: DataForgeFailureForgeClient, app: FastAPI
+):
     """Run the sandbox into a tmp sandbox root, then push the whole bundle
     (run + cases + receipts + report) to DataForge Local in one call."""
     from failureforge.reporting.scorer import (
@@ -118,7 +120,9 @@ def test_push_is_non_blocking_when_dataforge_unreachable(tmp_path: Path):
         bad.close()
 
 
-def test_promotion_transition_via_client(tmp_path: Path, client: DataForgeFailureForgeClient, app: FastAPI):
+def test_promotion_transition_via_client(
+    tmp_path: Path, client: DataForgeFailureForgeClient, app: FastAPI
+):
     sandbox = tmp_path / "sandbox"
     sandbox.mkdir()
     runner = SandboxRunner(
@@ -129,10 +133,12 @@ def test_promotion_transition_via_client(tmp_path: Path, client: DataForgeFailur
     runner.run(sandbox_run_id="SR-promo")
     client.push_run_bundle_from_disk(run_id="SR-promo", sandbox_root=sandbox)
 
-    receipt_id = next(iter(app.state.failureforge_service.list_receipts(sandbox_run_id="SR-promo")))[
-        "receipt_id"
-    ]
-    res = client.transition_promotion_status(receipt_id, new_status="approved_for_test_generation")
+    receipt_id = next(
+        iter(app.state.failureforge_service.list_receipts(sandbox_run_id="SR-promo"))
+    )["receipt_id"]
+    res = client.transition_promotion_status(
+        receipt_id, new_status="approved_for_test_generation"
+    )
     assert res.outcome == PushOutcome.accepted
     rec = app.state.failureforge_service.get_receipt(receipt_id)
     assert rec["promotion_status"] == "approved_for_test_generation"

@@ -55,11 +55,21 @@ class ClassificationAgent:
         already have raw outcomes."""
         return self._classify(outcome, outcome.failure_case)
 
-    def _classify(self, outcome: AttackOutcome, original: FailureCaseSpec) -> AttackOutcome:
+    def _classify(
+        self, outcome: AttackOutcome, original: FailureCaseSpec
+    ) -> AttackOutcome:
         rule = _CLASSIFIER_RULES.get(original.attack_type)
         if outcome.classification == "no_failure_observed" or rule is None:
-            severity = "info" if outcome.classification == "no_failure_observed" else outcome.severity
-            label = "no_failure_observed" if outcome.classification == "no_failure_observed" else "unclassified"
+            severity = (
+                "info"
+                if outcome.classification == "no_failure_observed"
+                else outcome.severity
+            )
+            label = (
+                "no_failure_observed"
+                if outcome.classification == "no_failure_observed"
+                else "unclassified"
+            )
             actual = f"{outcome.actual_result} | classifier_label={label}"
             spec = FailureCaseSpec(
                 failure_case_id=f"FC-CLASS-{original.failure_case_id}",

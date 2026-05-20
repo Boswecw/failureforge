@@ -68,14 +68,15 @@ def test_runner_fails_closed_when_canonical_source_hash_changes(tmp_path: Path):
     assert failed_run["status"] == "failed"
     assert failed_run["canonical_source_mutated"] is True
     assert failed_run["receipt_count"] == 0
-    assert failed_run["canonical_source_hash_before"] != failed_run[
-        "canonical_source_hash_after"
-    ]
+    assert (
+        failed_run["canonical_source_hash_before"]
+        != failed_run["canonical_source_hash_after"]
+    )
 
     run_path = sandbox / "runs" / "SR-s17-canonical-mutation" / "sandbox_run.json"
     disk_run = json.loads(run_path.read_text(encoding="utf-8"))
     assert disk_run == failed_run
-    assert (
-        sandbox / "runs" / "SR-s17-canonical-mutation" / "exit_code.txt"
-    ).read_text(encoding="utf-8") == "5\n"
+    assert (sandbox / "runs" / "SR-s17-canonical-mutation" / "exit_code.txt").read_text(
+        encoding="utf-8"
+    ) == "5\n"
     assert list((sandbox / "receipts").glob("FHR-*.json")) == []

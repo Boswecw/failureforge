@@ -95,7 +95,9 @@ def test_verify_receipts_cli_blocks_when_a_receipt_is_modified(tmp_path: Path):
     receipt_path = Path(result["receipt_paths"][0])
     body = json.loads(receipt_path.read_text(encoding="utf-8"))
     body["actual_result"] = "TAMPERED"
-    receipt_path.write_text(json.dumps(body, indent=2, sort_keys=True), encoding="utf-8")
+    receipt_path.write_text(
+        json.dumps(body, indent=2, sort_keys=True), encoding="utf-8"
+    )
 
     # Run the CLI directly against the temp sandbox by overlaying it onto the
     # repo root via PYTHONPATH + --target trick. Easier to just call the

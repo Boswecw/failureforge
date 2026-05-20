@@ -106,14 +106,19 @@ def _recommended_fix(receipt: dict[str, Any]) -> str:
         "malformed_input": "type-check input shape at the boundary; raise a typed error.",
         "state_failure": "investigate the divergence: actual_result must match invariant.",
         "no_failure_observed": "no fix needed; case may be promoted into the regression gate.",
-    }.get(receipt.get("classification", ""), "investigate; case requires manual triage.")
+    }.get(
+        receipt.get("classification", ""), "investigate; case requires manual triage."
+    )
 
 
 def _ready_for_gate(receipt: dict[str, Any]) -> bool:
     """A failure is ready to become a regression gate only when:
     - it is reproducible, AND
     - it is a real failure (not no_failure_observed)."""
-    return bool(receipt.get("reproducible")) and receipt.get("classification") != "no_failure_observed"
+    return (
+        bool(receipt.get("reproducible"))
+        and receipt.get("classification") != "no_failure_observed"
+    )
 
 
 def _logical_attack_id(receipt: dict[str, Any]) -> str:
@@ -146,8 +151,14 @@ def score_findings(receipts: Iterable[dict[str, Any]]) -> list[dict[str, Any]]:
     findings: list[dict[str, Any]] = []
     for (_repo, _cls, _case), group in groups.items():
         # Pick the worst severity in the group.
-        worst = max(group, key=lambda x: _SEVERITY_WEIGHT.get(x.get("severity", "info"), 0))
-        repro = "reproducible" if any(x.get("reproducible") for x in group) else "non_reproducible"
+        worst = max(
+            group, key=lambda x: _SEVERITY_WEIGHT.get(x.get("severity", "info"), 0)
+        )
+        repro = (
+            "reproducible"
+            if any(x.get("reproducible") for x in group)
+            else "non_reproducible"
+        )
         blast = _classify_blast_radius(worst)
         fix_complexity = _classify_fix_complexity(worst)
         lanes = sorted({r.get("agent_lane") for r in group if r.get("agent_lane")})

@@ -55,7 +55,9 @@ def test_chaos_partial_write_finds_state_failure(tmp_path: Path):
     chaos = ChaosAgent(target_repo="example-repo")
     result = runner.run(agents=[chaos], sandbox_run_id="SR-chaos-partial")
     by_id = {
-        json.loads(Path(p).read_text())["failure_case_id"]: json.loads(Path(p).read_text())
+        json.loads(Path(p).read_text())["failure_case_id"]: json.loads(
+            Path(p).read_text()
+        )
         for p in result["receipt_paths"]
     }
     partial = by_id["FC-CHAOS-PARTIAL"]
@@ -79,7 +81,9 @@ def test_mutation_agent_kills_path_check_and_reports_state_failure(tmp_path: Pat
     mutation = MutationAgent(target_repo="example-repo")
     result = runner.run(agents=[mutation], sandbox_run_id="SR-mutation")
     by_id = {
-        json.loads(Path(p).read_text())["failure_case_id"]: json.loads(Path(p).read_text())
+        json.loads(Path(p).read_text())["failure_case_id"]: json.loads(
+            Path(p).read_text()
+        )
         for p in result["receipt_paths"]
     }
     path_mut = by_id["FC-MUTATION-PATH"]
@@ -103,8 +107,12 @@ def test_mutation_agent_restores_workspace_after_run(tmp_path: Path):
     mutation = MutationAgent(target_repo="example-repo")
     runner.run(agents=[mutation], sandbox_run_id="SR-mutation-restore")
 
-    canonical = (_REPO_ROOT / "sandbox-targets" / "example-repo" / "registry.py").read_text()
-    sandbox_copy = (sandbox / "workspaces" / "SR-mutation-restore" / "example-repo" / "registry.py").read_text()
+    canonical = (
+        _REPO_ROOT / "sandbox-targets" / "example-repo" / "registry.py"
+    ).read_text()
+    sandbox_copy = (
+        sandbox / "workspaces" / "SR-mutation-restore" / "example-repo" / "registry.py"
+    ).read_text()
     assert sandbox_copy == canonical
 
 
@@ -293,7 +301,9 @@ def test_full_lane_set_runs_against_demo_target(tmp_path: Path):
     # The duplicate_replay finding should reflect agreement across at least
     # edge_case + reproduction + classification.
     dup_findings = [
-        f for f in report["ranked_findings"] if f["classification"] == "duplicate_replay"
+        f
+        for f in report["ranked_findings"]
+        if f["classification"] == "duplicate_replay"
     ]
     assert dup_findings
     top_dup = max(dup_findings, key=lambda f: f["lane_agreement"])

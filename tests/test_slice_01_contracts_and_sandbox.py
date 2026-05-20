@@ -123,7 +123,9 @@ def test_contracts_validate_sample_json():
 # 2 + 9. ---------------------------------------------------- workspace isolation
 
 
-def test_sandbox_workspace_is_a_copy_and_canonical_target_is_unchanged(fresh_sandbox: Path):
+def test_sandbox_workspace_is_a_copy_and_canonical_target_is_unchanged(
+    fresh_sandbox: Path,
+):
     target_source = _REPO_ROOT / "sandbox-targets" / "example-repo"
     canonical_hash_before = _hash_tree(target_source)
 
@@ -197,7 +199,9 @@ def test_hardening_report_has_at_least_one_ranked_finding(fresh_sandbox: Path):
         receipts=receipts,
     )
     assert len(report["ranked_findings"]) >= 1
-    json_path, md_path = write_hardening_artifacts(report=report, sandbox_root=fresh_sandbox)
+    json_path, md_path = write_hardening_artifacts(
+        report=report, sandbox_root=fresh_sandbox
+    )
     assert json_path.is_relative_to(fresh_sandbox / "reports")
     assert md_path.is_relative_to(fresh_sandbox / "reports")
     md = md_path.read_text()

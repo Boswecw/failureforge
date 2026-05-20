@@ -79,7 +79,9 @@ def http(app: FastAPI) -> TestClient:
 # ---- client + renderer round trips -----------------------------------
 
 
-def test_operator_client_morning_report_includes_top_finding(tmp_path: Path, http: TestClient):
+def test_operator_client_morning_report_includes_top_finding(
+    tmp_path: Path, http: TestClient
+):
     _seed_one_run(http, tmp_path)
     op = OperatorClient(http=http)
     view = op.morning_report()
@@ -101,7 +103,9 @@ def test_operator_client_run_detail_renders(tmp_path: Path, http: TestClient):
     assert "Receipts:" in text
 
 
-def test_operator_client_receipt_detail_includes_copy_paste_replay(tmp_path: Path, http: TestClient):
+def test_operator_client_receipt_detail_includes_copy_paste_replay(
+    tmp_path: Path, http: TestClient
+):
     _seed_one_run(http, tmp_path)
     op = OperatorClient(http=http)
     runs = op.list_runs()
@@ -117,7 +121,9 @@ def test_operator_client_receipt_detail_includes_copy_paste_replay(tmp_path: Pat
 # ---- CLI surface -----------------------------------------------------
 
 
-def test_cli_morning_report_subcommand(tmp_path: Path, http: TestClient, monkeypatch, capsys):
+def test_cli_morning_report_subcommand(
+    tmp_path: Path, http: TestClient, monkeypatch, capsys
+):
     _seed_one_run(http, tmp_path)
 
     # Patch the CLI's OperatorClient creator to use our TestClient.
@@ -135,7 +141,9 @@ def test_cli_morning_report_subcommand(tmp_path: Path, http: TestClient, monkeyp
     assert "Replay:" in captured.out
 
 
-def test_cli_view_run_and_view_receipt(tmp_path: Path, http: TestClient, monkeypatch, capsys):
+def test_cli_view_run_and_view_receipt(
+    tmp_path: Path, http: TestClient, monkeypatch, capsys
+):
     _seed_one_run(http, tmp_path)
     from failureforge import cli as cli_mod
 

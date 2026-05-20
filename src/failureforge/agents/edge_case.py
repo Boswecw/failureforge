@@ -99,7 +99,11 @@ class EdgeCaseAgent:
                 attack_type="unknown_enum",
                 attack_description="Submit a record with an unknown `kind` enum value.",
                 expected_result="ValueError or rejection.",
-                attack_input={"key": "K3", "value": "V3", "kind": "not_an_allowed_kind"},
+                attack_input={
+                    "key": "K3",
+                    "value": "V3",
+                    "kind": "not_an_allowed_kind",
+                },
             )
         )
         cases.append(
@@ -139,7 +143,6 @@ class EdgeCaseAgent:
             )
         )
         return cases
-
 
     # Slice 07 — protocol surface so SandboxRunner can drive multiple lanes
     # uniformly. Each FailureCase becomes one AttackOutcome via the existing

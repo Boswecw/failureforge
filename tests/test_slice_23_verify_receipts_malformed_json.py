@@ -40,7 +40,9 @@ def test_verify_receipts_reports_malformed_json_without_traceback(
     receipts_dir = tmp_path / "sandbox" / "receipts"
     receipts_dir.mkdir(parents=True)
     _seed_valid_receipt(receipts_dir / "FHR-s23-valid.json")
-    (receipts_dir / "FHR-s23-malformed.json").write_text("{not json\n", encoding="utf-8")
+    (receipts_dir / "FHR-s23-malformed.json").write_text(
+        "{not json\n", encoding="utf-8"
+    )
     monkeypatch.setattr(cli, "_failureforge_root", lambda: tmp_path)
 
     rc = main(["verify-receipts"])
@@ -50,6 +52,8 @@ def test_verify_receipts_reports_malformed_json_without_traceback(
     assert rc == 2
     assert summary["checked"] == 2
     assert len(summary["failures"]) == 1
-    assert summary["failures"][0]["receipt"] == "sandbox/receipts/FHR-s23-malformed.json"
+    assert (
+        summary["failures"][0]["receipt"] == "sandbox/receipts/FHR-s23-malformed.json"
+    )
     assert "Expecting property name" in summary["failures"][0]["error"]
     assert "Traceback" not in captured.err

@@ -78,9 +78,10 @@ def test_replay_fails_closed_when_canonical_source_hash_changes(
     assert failed_run["status"] == "failed"
     assert failed_run["receipt_count"] == 0
     assert failed_run["canonical_source_mutated"] is True
-    assert failed_run["canonical_source_hash_before"] != failed_run[
-        "canonical_source_hash_after"
-    ]
+    assert (
+        failed_run["canonical_source_hash_before"]
+        != failed_run["canonical_source_hash_after"]
+    )
 
     run_dir = sandbox / "runs" / "SR-replay-FHR-s20-replay"
     disk_run = json.loads((run_dir / "sandbox_run.json").read_text(encoding="utf-8"))

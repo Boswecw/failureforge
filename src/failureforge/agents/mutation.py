@@ -44,13 +44,17 @@ _MUTATIONS: list[_Mutation] = [
         expected_result="With the guard deleted, the bad_path attack must NO LONGER raise.",
         snippet=(
             'if "path" in payload:\n'
-            "            path = str(payload[\"path\"])\n"
+            '            path = str(payload["path"])\n'
             '            if ".." in path or path.startswith("/"):\n'
             '                raise ValueError(f"unsafe path: {path}")\n'
             '            if "\\x00" in path:\n'
             '                raise ValueError("path contains NUL")'
         ),
-        attack_input={"key": "K-mutation-path", "value": "V", "path": "../../etc/passwd"},
+        attack_input={
+            "key": "K-mutation-path",
+            "value": "V",
+            "path": "../../etc/passwd",
+        },
     ),
     _Mutation(
         failure_case_id="FC-MUTATION-MISSING",
