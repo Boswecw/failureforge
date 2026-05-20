@@ -13,7 +13,6 @@ from failureforge.runtime.replay import replay_receipt
 from failureforge.runtime.sandbox import AttackOutcome
 from failureforge.validation import apply_receipt_hash
 
-
 _ROOT = Path(__file__).resolve().parents[1]
 
 

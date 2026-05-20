@@ -12,7 +12,6 @@ Plan §10 §"Slice 02 gates":
 from __future__ import annotations
 
 import json
-import subprocess
 from pathlib import Path
 
 import pytest
@@ -25,7 +24,6 @@ from failureforge.validation import (
     validate_failure_receipt,
     verify_receipt_hash,
 )
-
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 
@@ -102,7 +100,6 @@ def test_verify_receipts_cli_blocks_when_a_receipt_is_modified(tmp_path: Path):
     # Run the CLI directly against the temp sandbox by overlaying it onto the
     # repo root via PYTHONPATH + --target trick. Easier to just call the
     # function with a local sandbox: it returns the rc and prints summary.
-    from failureforge.cli import main
 
     # The CLI's verify-receipts uses _failureforge_root() / sandbox/receipts;
     # for this test we copy the tampered receipt into the real repo's sandbox

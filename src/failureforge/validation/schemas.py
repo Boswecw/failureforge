@@ -11,7 +11,6 @@ import jsonschema
 from jsonschema import Draft7Validator
 from jsonschema.exceptions import ValidationError as _JSValidationError
 
-
 _SCHEMA_ROOT = Path(__file__).resolve().parents[3] / "schemas"
 
 

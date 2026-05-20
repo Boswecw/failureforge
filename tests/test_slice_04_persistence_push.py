@@ -25,7 +25,6 @@ from failureforge.persistence import (  # noqa: E402
 )
 from failureforge.runtime.sandbox import SandboxRunner  # noqa: E402
 
-
 _FF_ROOT = Path(__file__).resolve().parents[1]
 
 
@@ -65,7 +64,7 @@ def test_full_run_bundle_push_round_trip(tmp_path: Path, client: DataForgeFailur
         target_repo_name="example-repo",
         target_repo_source=_FF_ROOT / "sandbox-targets" / "example-repo",
     )
-    result = runner.run(sandbox_run_id="SR-push-001")
+    runner.run(sandbox_run_id="SR-push-001")
     receipts = load_and_verify_receipts(sandbox / "receipts")
     report = build_hardening_report(
         sandbox_run_id="SR-push-001",
@@ -127,7 +126,7 @@ def test_promotion_transition_via_client(tmp_path: Path, client: DataForgeFailur
         target_repo_name="example-repo",
         target_repo_source=_FF_ROOT / "sandbox-targets" / "example-repo",
     )
-    result = runner.run(sandbox_run_id="SR-promo")
+    runner.run(sandbox_run_id="SR-promo")
     client.push_run_bundle_from_disk(run_id="SR-promo", sandbox_root=sandbox)
 
     receipt_id = next(iter(app.state.failureforge_service.list_receipts(sandbox_run_id="SR-promo")))[

@@ -6,10 +6,7 @@ import json
 import sys
 from pathlib import Path
 
-import pytest
-
 from failureforge.validation import apply_receipt_hash
-
 
 _ROOT = Path(__file__).resolve().parents[1]
 _ECOSYSTEM = _ROOT.parent
@@ -71,7 +68,11 @@ def _receipt() -> dict:
 
 
 def _service():
-    from app.failureforge.service import FailureForgeService, WriteAccepted, WriteRejected
+    from app.failureforge.service import (
+        FailureForgeService,
+        WriteAccepted,
+        WriteRejected,
+    )
 
     return FailureForgeService(), WriteAccepted, WriteRejected
 

@@ -13,7 +13,6 @@ from failureforge.runtime import SandboxRunner, TargetAdapterError, load_target_
 from failureforge.runtime.replay import replay_receipt
 from failureforge.validation import apply_receipt_hash
 
-
 _ROOT = Path(__file__).resolve().parents[1]
 
 

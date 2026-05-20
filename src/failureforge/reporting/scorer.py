@@ -13,17 +13,17 @@ Scoring formula (per plan §07):
 from __future__ import annotations
 
 import json
-from collections import Counter, defaultdict
-from datetime import datetime, timezone
+from collections import defaultdict
+from collections.abc import Iterable
+from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any, Iterable
+from typing import Any
 
 from failureforge.validation import (
     validate_failure_receipt,
     validate_hardening_report,
     verify_receipt_hash,
 )
-
 
 _SEVERITY_WEIGHT = {
     "critical": 100,
@@ -54,7 +54,7 @@ _FIX_PENALTY = {
 
 
 def _utc_now() -> str:
-    return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+    return datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%S.%fZ")
 
 
 def _stable_id(prefix: str, *parts: str) -> str:

@@ -25,7 +25,6 @@ from failureforge.promotion import (  # noqa: E402
 )
 from failureforge.runtime.sandbox import SandboxRunner  # noqa: E402
 
-
 _FF_ROOT = Path(__file__).resolve().parents[1]
 
 

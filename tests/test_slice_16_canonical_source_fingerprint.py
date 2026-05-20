@@ -9,7 +9,6 @@ from pathlib import Path
 from failureforge.runtime import SandboxRunner, load_target_adapter
 from failureforge.validation import validate_sandbox_run
 
-
 _ROOT = Path(__file__).resolve().parents[1]
 _SHA256 = re.compile(r"^[0-9a-f]{64}$")
 

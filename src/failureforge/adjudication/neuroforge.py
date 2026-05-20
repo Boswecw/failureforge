@@ -12,8 +12,9 @@ from __future__ import annotations
 import hashlib
 import json
 from collections import Counter
-from datetime import datetime, timezone
-from typing import Any, Iterable
+from collections.abc import Iterable
+from datetime import UTC, datetime
+from typing import Any
 
 from failureforge.validation import (
     apply_model_adjudication_hash,
@@ -21,7 +22,6 @@ from failureforge.validation import (
     validate_neuroforge_adjudication_report,
     validate_root_cause_cluster,
 )
-
 
 _CLASSIFICATIONS = {
     "state_failure",
@@ -47,7 +47,7 @@ def _canonical(payload: Any) -> bytes:
 
 
 def _utc_now() -> str:
-    return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+    return datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%S.%fZ")
 
 
 def _stable_id(prefix: str, *parts: str) -> str:

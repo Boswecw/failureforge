@@ -24,7 +24,6 @@ from failureforge.validation import (
     verify_model_adjudication_hash,
 )
 
-
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 _CREATED = "2026-05-04T15:00:00Z"
 

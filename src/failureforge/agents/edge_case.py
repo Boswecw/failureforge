@@ -7,17 +7,18 @@ sandbox-copied workspace.
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any, Callable, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
     from failureforge.runtime.sandbox import AttackOutcome
 
 
 def _utc_now() -> str:
-    return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+    return datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%S.%fZ")
 
 
 @dataclass
@@ -145,10 +146,10 @@ class EdgeCaseAgent:
     # ``run_attack_against_target`` helper.
     lane: str = "edge_case"
 
-    def produce(self, *, workspace: Path, target_repo: str) -> list["AttackOutcome"]:
+    def produce(self, *, workspace: Path, target_repo: str) -> list[AttackOutcome]:
         from failureforge.runtime.sandbox import run_attack_against_target
 
-        outcomes: list["AttackOutcome"] = []
+        outcomes: list[AttackOutcome] = []
         for spec in self.generate_default_catalog():
             outcomes.append(run_attack_against_target(workspace=workspace, case=spec))
         return outcomes

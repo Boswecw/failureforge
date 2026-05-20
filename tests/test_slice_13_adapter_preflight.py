@@ -14,7 +14,6 @@ from failureforge.runtime import (
     validate_target_adapter_for_source,
 )
 
-
 _ROOT = Path(__file__).resolve().parents[1]
 
 

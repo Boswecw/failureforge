@@ -8,10 +8,8 @@ never touched.
 from __future__ import annotations
 
 import io
-import traceback
 from contextlib import redirect_stderr, redirect_stdout
 from pathlib import Path
-from typing import Any
 
 from failureforge.agents.edge_case import FailureCaseSpec
 from failureforge.runtime.sandbox import AttackOutcome
@@ -103,11 +101,11 @@ class ChaosAgent:
         patch_kind: str,
     ) -> AttackOutcome:
         registry_mod = load_registry_module(workspace)
-        Registry = getattr(registry_mod, "Registry")
+        Registry = registry_mod.Registry
 
         registry = Registry()
         # Drive a single baseline upsert so we have a reference state.
-        baseline_id = registry.upsert({"key": "K-baseline", "value": "B"})
+        registry.upsert({"key": "K-baseline", "value": "B"})
         baseline_size = registry.size()
 
         original_upsert = Registry.upsert

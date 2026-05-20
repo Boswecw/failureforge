@@ -12,18 +12,18 @@ Doctrine constraints:
 
 from __future__ import annotations
 
+import hashlib
 import io
 import json
 import shlex
 import shutil
-import sys
 import traceback
+from collections.abc import Iterable
 from contextlib import redirect_stderr, redirect_stdout
 from dataclasses import dataclass
-from datetime import datetime, timezone
-import hashlib
+from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any, Iterable
+from typing import Any
 
 from failureforge.agents.edge_case import EdgeCaseAgent, FailureCaseSpec
 from failureforge.runtime.target_adapter import (
@@ -40,7 +40,7 @@ from failureforge.validation import (
 
 
 def _utc_now() -> str:
-    return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+    return datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%S.%fZ")
 
 
 def _stable_id(prefix: str, *parts: str) -> str:
@@ -69,7 +69,7 @@ class SandboxPaths:
     reports_dir: Path
 
     @classmethod
-    def for_run(cls, *, sandbox_root: Path, sandbox_run_id: str, target_repo: str) -> "SandboxPaths":
+    def for_run(cls, *, sandbox_root: Path, sandbox_run_id: str, target_repo: str) -> SandboxPaths:
         ws = sandbox_root / "workspaces" / sandbox_run_id / target_repo
         run_dir = sandbox_root / "runs" / sandbox_run_id
         receipts_dir = sandbox_root / "receipts"

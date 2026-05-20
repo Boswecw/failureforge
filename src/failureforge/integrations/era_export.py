@@ -4,9 +4,10 @@ from __future__ import annotations
 
 import hashlib
 import json
-from datetime import datetime, timezone
+from collections.abc import Iterable
+from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any, Iterable
+from typing import Any
 
 from failureforge.validation import validate_failureforge_to_era_export
 
@@ -27,7 +28,7 @@ def _stable_id(prefix: str, *parts: str) -> str:
 
 
 def _utc_now() -> str:
-    return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+    return datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%S.%fZ")
 
 
 def _receipt_ids(receipts: Iterable[dict[str, Any]]) -> list[str]:

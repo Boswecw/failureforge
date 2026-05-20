@@ -24,7 +24,6 @@ from failureforge.validation import (
     validate_failureforge_to_era_export,
 )
 
-
 _ROOT = Path(__file__).resolve().parents[1]
 
 

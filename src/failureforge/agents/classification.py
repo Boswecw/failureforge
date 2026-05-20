@@ -22,7 +22,6 @@ from pathlib import Path
 from failureforge.agents.edge_case import EdgeCaseAgent, FailureCaseSpec
 from failureforge.runtime.sandbox import AttackOutcome, run_attack_against_target
 
-
 _CLASSIFIER_RULES: dict[str, tuple[str, str]] = {
     # attack_type -> (escalated_severity_for_real_failure, recommended_label)
     "duplicate_replay": ("critical", "unbounded_growth"),

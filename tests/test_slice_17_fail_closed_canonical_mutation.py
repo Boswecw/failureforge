@@ -12,7 +12,6 @@ from failureforge.agents.edge_case import FailureCaseSpec
 from failureforge.runtime import CanonicalSourceMutationError, SandboxRunner
 from failureforge.runtime.sandbox import AttackOutcome
 
-
 _ROOT = Path(__file__).resolve().parents[1]
 
 

@@ -12,9 +12,9 @@ from failureforge.promotion.builders import (
 )
 from failureforge.promotion.client import (
     OperatorPromotionClient,
-    SmithHandshakeClient,
     PromotionPushOutcome,
     PromotionPushResult,
+    SmithHandshakeClient,
 )
 
 __all__ = [

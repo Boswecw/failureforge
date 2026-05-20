@@ -80,7 +80,7 @@ class DataForgeFailureForgeClient:
         if self._owns_client:
             self._client.close()
 
-    def __enter__(self) -> "DataForgeFailureForgeClient":
+    def __enter__(self) -> DataForgeFailureForgeClient:
         return self
 
     def __exit__(self, *exc: Any) -> None:
