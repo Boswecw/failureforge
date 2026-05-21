@@ -10,14 +10,14 @@ from __future__ import annotations
 
 import json
 from dataclasses import dataclass, field
-from enum import Enum
+from enum import StrEnum
 from pathlib import Path
 from typing import Any
 
 import httpx
 
 
-class PushOutcome(str, Enum):
+class PushOutcome(StrEnum):
     accepted = "accepted"
     accepted_idempotent = "accepted_idempotent"
     rejected = "rejected"

@@ -38,11 +38,6 @@ select = ["E", "F", "I", "B", "C4", "UP"]
 ignore = [
     # Line length handled by formatter, not lint.
     "E501",
-    # (str, Enum) -> StrEnum migration is a behavioral change (wire-format
-    # serialization, JSON dumping). Defer to a focused slice rather than
-    # silently lump it into a lint baseline. Re-enable once the migration
-    # ships.
-    "UP042",
 ]
 
 [tool.ruff.lint.per-file-ignores]
