@@ -1,0 +1,138 @@
+{
+  "created_at": "2026-05-21T20:58:26.738574Z",
+  "ranked_findings": [
+    {
+      "blast_radius": "service",
+      "classification": "duplicate_replay",
+      "failure_id": "FC-0001",
+      "fix_complexity": "small",
+      "frequency": 1,
+      "lane_agreement": 1,
+      "lanes": [
+        "edge_case"
+      ],
+      "rank": 1,
+      "ready_for_gate": true,
+      "receipts": [
+        "FHR-4feb6e9f64"
+      ],
+      "recommended_fix": "enforce idempotency on the request key (existing-result reuse).",
+      "repro_command": "./scripts/replay_failure.sh sandbox/receipts/FHR-4feb6e9f64.json",
+      "reproducibility": "reproducible",
+      "score": 96,
+      "severity": "high"
+    },
+    {
+      "blast_radius": "unknown",
+      "classification": "no_failure_observed",
+      "failure_id": "FC-0002",
+      "fix_complexity": "trivial",
+      "frequency": 1,
+      "lane_agreement": 1,
+      "lanes": [
+        "edge_case"
+      ],
+      "rank": 2,
+      "ready_for_gate": false,
+      "receipts": [
+        "FHR-78ed924d57"
+      ],
+      "recommended_fix": "no fix needed; case may be promoted into the regression gate.",
+      "repro_command": "./scripts/replay_failure.sh sandbox/receipts/FHR-78ed924d57.json",
+      "reproducibility": "reproducible",
+      "score": 33,
+      "severity": "info"
+    },
+    {
+      "blast_radius": "unknown",
+      "classification": "no_failure_observed",
+      "failure_id": "FC-0003",
+      "fix_complexity": "trivial",
+      "frequency": 1,
+      "lane_agreement": 1,
+      "lanes": [
+        "edge_case"
+      ],
+      "rank": 3,
+      "ready_for_gate": false,
+      "receipts": [
+        "FHR-3c27706d9a"
+      ],
+      "recommended_fix": "no fix needed; case may be promoted into the regression gate.",
+      "repro_command": "./scripts/replay_failure.sh sandbox/receipts/FHR-3c27706d9a.json",
+      "reproducibility": "reproducible",
+      "score": 33,
+      "severity": "info"
+    },
+    {
+      "blast_radius": "unknown",
+      "classification": "no_failure_observed",
+      "failure_id": "FC-0004",
+      "fix_complexity": "trivial",
+      "frequency": 1,
+      "lane_agreement": 1,
+      "lanes": [
+        "edge_case"
+      ],
+      "rank": 4,
+      "ready_for_gate": false,
+      "receipts": [
+        "FHR-abf7cb6fe4"
+      ],
+      "recommended_fix": "no fix needed; case may be promoted into the regression gate.",
+      "repro_command": "./scripts/replay_failure.sh sandbox/receipts/FHR-abf7cb6fe4.json",
+      "reproducibility": "reproducible",
+      "score": 33,
+      "severity": "info"
+    },
+    {
+      "blast_radius": "unknown",
+      "classification": "no_failure_observed",
+      "failure_id": "FC-0005",
+      "fix_complexity": "trivial",
+      "frequency": 1,
+      "lane_agreement": 1,
+      "lanes": [
+        "edge_case"
+      ],
+      "rank": 5,
+      "ready_for_gate": false,
+      "receipts": [
+        "FHR-e3092e8016"
+      ],
+      "recommended_fix": "no fix needed; case may be promoted into the regression gate.",
+      "repro_command": "./scripts/replay_failure.sh sandbox/receipts/FHR-e3092e8016.json",
+      "reproducibility": "reproducible",
+      "score": 33,
+      "severity": "info"
+    },
+    {
+      "blast_radius": "unknown",
+      "classification": "no_failure_observed",
+      "failure_id": "FC-0006",
+      "fix_complexity": "trivial",
+      "frequency": 1,
+      "lane_agreement": 1,
+      "lanes": [
+        "edge_case"
+      ],
+      "rank": 6,
+      "ready_for_gate": false,
+      "receipts": [
+        "FHR-8ba4617c92"
+      ],
+      "recommended_fix": "no fix needed; case may be promoted into the regression gate.",
+      "repro_command": "./scripts/replay_failure.sh sandbox/receipts/FHR-8ba4617c92.json",
+      "reproducibility": "reproducible",
+      "score": 33,
+      "severity": "info"
+    }
+  ],
+  "receipts_total": 6,
+  "report_id": "HR-770c3e54ea",
+  "reproducible_total": 6,
+  "sandbox_run_id": "SR-no-canonical-mutation",
+  "schema_version": "HardeningReport.v1",
+  "summary": "6 receipts produced, 6 reproducible, top finding: enforce idempotency on the request key (existing-result reuse).",
+  "target_repo": "example-repo"
+}

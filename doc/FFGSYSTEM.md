@@ -1,6 +1,6 @@
 # FFGSYSTEM
 
-Generated from doc/system on 2026-05-07T09:29:17Z.
+Generated from doc/system on 2026-05-21T20:58:26Z.
 
 # 00 Purpose
 

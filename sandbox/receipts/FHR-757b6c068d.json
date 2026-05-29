@@ -1,0 +1,25 @@
+{
+  "actual_result": "registry rejected as expected: ValueError('unsafe path: ../../etc/passwd')",
+  "agent_lane": "edge_case",
+  "artifact_paths": [
+    "sandbox/runs/SR-03b9c9ad73/stdout.log",
+    "sandbox/runs/SR-03b9c9ad73/stderr.log"
+  ],
+  "classification": "no_failure_observed",
+  "created_at": "2026-05-20T17:33:10.628648Z",
+  "exit_code": 0,
+  "expected_result": "Path rejected with safety error.",
+  "failure_case_id": "FC-0004",
+  "promotion_status": "pending_operator_review",
+  "receipt_hash": "19854121244197cf22ca4fe9c1fdf0fbb7c3bd4a390957d3f86dc450630d53fc",
+  "receipt_id": "FHR-757b6c068d",
+  "repro_command": "./scripts/replay_failure.sh sandbox/receipts/FHR-757b6c068d.json",
+  "reproducible": true,
+  "sandbox_run_id": "SR-03b9c9ad73",
+  "schema_version": "FailureHarvestReceipt.v1",
+  "severity": "info",
+  "stderr_excerpt": "",
+  "stdout_excerpt": "",
+  "target_ref": "ci-gate",
+  "target_repo": "example-repo"
+}

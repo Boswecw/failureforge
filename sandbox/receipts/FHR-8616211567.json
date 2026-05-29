@@ -1,0 +1,25 @@
+{
+  "actual_result": "registry rejected as expected: ValueError('unknown kind: not_an_allowed_kind')",
+  "agent_lane": "edge_case",
+  "artifact_paths": [
+    "sandbox/runs/SR-364c6dc753/stdout.log",
+    "sandbox/runs/SR-364c6dc753/stderr.log"
+  ],
+  "classification": "no_failure_observed",
+  "created_at": "2026-05-21T20:58:25.988973Z",
+  "exit_code": 0,
+  "expected_result": "ValueError or rejection.",
+  "failure_case_id": "FC-0003",
+  "promotion_status": "pending_operator_review",
+  "receipt_hash": "16b956508e9f979e92a9fe01bf8159533bfc858115806c72e5ef96954b615aa7",
+  "receipt_id": "FHR-8616211567",
+  "repro_command": "./scripts/replay_failure.sh sandbox/receipts/FHR-8616211567.json",
+  "reproducible": true,
+  "sandbox_run_id": "SR-364c6dc753",
+  "schema_version": "FailureHarvestReceipt.v1",
+  "severity": "info",
+  "stderr_excerpt": "",
+  "stdout_excerpt": "",
+  "target_ref": "ci-gate",
+  "target_repo": "example-repo"
+}

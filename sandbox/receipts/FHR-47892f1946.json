@@ -1,0 +1,25 @@
+{
+  "actual_result": "NUL byte was sanitized or rejected",
+  "agent_lane": "edge_case",
+  "artifact_paths": [
+    "sandbox/runs/SR-364c6dc753/stdout.log",
+    "sandbox/runs/SR-364c6dc753/stderr.log"
+  ],
+  "classification": "no_failure_observed",
+  "created_at": "2026-05-21T20:58:25.990382Z",
+  "exit_code": 0,
+  "expected_result": "Sanitized or rejected.",
+  "failure_case_id": "FC-0005",
+  "promotion_status": "pending_operator_review",
+  "receipt_hash": "22b9dc9a296a850f5ce6ed4b0a6644e1f2e21e5753d15bb0e069efe62b852516",
+  "receipt_id": "FHR-47892f1946",
+  "repro_command": "./scripts/replay_failure.sh sandbox/receipts/FHR-47892f1946.json",
+  "reproducible": true,
+  "sandbox_run_id": "SR-364c6dc753",
+  "schema_version": "FailureHarvestReceipt.v1",
+  "severity": "info",
+  "stderr_excerpt": "",
+  "stdout_excerpt": "",
+  "target_ref": "ci-gate",
+  "target_repo": "example-repo"
+}

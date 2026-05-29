@@ -1,0 +1,25 @@
+{
+  "actual_result": "registry rejected as expected: TypeError('payload must be a mapping')",
+  "agent_lane": "edge_case",
+  "artifact_paths": [
+    "sandbox/runs/SR-03b9c9ad73/stdout.log",
+    "sandbox/runs/SR-03b9c9ad73/stderr.log"
+  ],
+  "classification": "no_failure_observed",
+  "created_at": "2026-05-20T17:33:10.630070Z",
+  "exit_code": 0,
+  "expected_result": "Validation error, registry remains stable.",
+  "failure_case_id": "FC-0006",
+  "promotion_status": "pending_operator_review",
+  "receipt_hash": "566d49f88d51bf0d654d8885eb09cbeaeef418983d8ec9fe9d86ff362361cde7",
+  "receipt_id": "FHR-77c2f09406",
+  "repro_command": "./scripts/replay_failure.sh sandbox/receipts/FHR-77c2f09406.json",
+  "reproducible": true,
+  "sandbox_run_id": "SR-03b9c9ad73",
+  "schema_version": "FailureHarvestReceipt.v1",
+  "severity": "info",
+  "stderr_excerpt": "",
+  "stdout_excerpt": "",
+  "target_ref": "ci-gate",
+  "target_repo": "example-repo"
+}

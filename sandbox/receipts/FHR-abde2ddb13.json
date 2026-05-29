@@ -1,0 +1,25 @@
+{
+  "actual_result": "registry rejected as expected: TypeError('payload must be a mapping')",
+  "agent_lane": "edge_case",
+  "artifact_paths": [
+    "sandbox/runs/SR-external-source/stdout.log",
+    "sandbox/runs/SR-external-source/stderr.log"
+  ],
+  "classification": "no_failure_observed",
+  "created_at": "2026-05-21T20:58:25.105286Z",
+  "exit_code": 0,
+  "expected_result": "Validation error, registry remains stable.",
+  "failure_case_id": "FC-0006",
+  "promotion_status": "pending_operator_review",
+  "receipt_hash": "62e7f83a5bda6af6c79499490f789c4355e1dbe227a258f3ce25bb6bda84da60",
+  "receipt_id": "FHR-abde2ddb13",
+  "repro_command": "./scripts/replay_failure.sh sandbox/receipts/FHR-abde2ddb13.json --target-source /tmp/pytest-of-charlie/pytest-11/test_cli_runs_external_target_0/example-repo --adapter fixtures/valid/TargetAdapter.v1.valid.json",
+  "reproducible": true,
+  "sandbox_run_id": "SR-external-source",
+  "schema_version": "FailureHarvestReceipt.v1",
+  "severity": "info",
+  "stderr_excerpt": "",
+  "stdout_excerpt": "",
+  "target_ref": "local",
+  "target_repo": "example-repo"
+}

@@ -1,0 +1,17 @@
+{
+  "agent_lanes": [
+    "edge_case"
+  ],
+  "canonical_source_hash_after": "76f879482d549f833d106e517014b24eff5c408cd9098e03001de0710f09f3c7",
+  "canonical_source_hash_before": "76f879482d549f833d106e517014b24eff5c408cd9098e03001de0710f09f3c7",
+  "canonical_source_mutated": false,
+  "completed_at": "2026-05-20T17:33:11.095139Z",
+  "receipt_count": 0,
+  "sandbox_run_id": "SR-replay-FHR-77c2f09406",
+  "schema_version": "SandboxRun.v1",
+  "source_ref": "ci-gate",
+  "started_at": "2026-05-20T17:33:11.093492Z",
+  "status": "completed",
+  "target_repo": "example-repo",
+  "workspace_path": "sandbox/workspaces/SR-replay-FHR-77c2f09406/example-repo"
+}

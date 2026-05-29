@@ -1,0 +1,25 @@
+{
+  "actual_result": "NUL byte was sanitized or rejected",
+  "agent_lane": "edge_case",
+  "artifact_paths": [
+    "sandbox/runs/SR-external-source/stdout.log",
+    "sandbox/runs/SR-external-source/stderr.log"
+  ],
+  "classification": "no_failure_observed",
+  "created_at": "2026-05-21T20:58:25.104537Z",
+  "exit_code": 0,
+  "expected_result": "Sanitized or rejected.",
+  "failure_case_id": "FC-0005",
+  "promotion_status": "pending_operator_review",
+  "receipt_hash": "6666f540212b584bafe47e84c73c8b8cddf098b1489aead712ce256c1b36b403",
+  "receipt_id": "FHR-7503640851",
+  "repro_command": "./scripts/replay_failure.sh sandbox/receipts/FHR-7503640851.json --target-source /tmp/pytest-of-charlie/pytest-11/test_cli_runs_external_target_0/example-repo --adapter fixtures/valid/TargetAdapter.v1.valid.json",
+  "reproducible": true,
+  "sandbox_run_id": "SR-external-source",
+  "schema_version": "FailureHarvestReceipt.v1",
+  "severity": "info",
+  "stderr_excerpt": "",
+  "stdout_excerpt": "",
+  "target_ref": "local",
+  "target_repo": "example-repo"
+}

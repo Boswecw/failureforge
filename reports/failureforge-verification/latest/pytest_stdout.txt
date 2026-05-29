@@ -45,7 +45,7 @@ tests/test_slice_09_adjudication.py: 86 warnings
 tests/test_slice_10_bridge_contracts.py: 16 warnings
 tests/test_slice_10_governance_reconciliation.py: 8 warnings
 tests/test_slice_11_target_adapters.py: 23 warnings
-tests/test_slice_12_external_target_source.py: 30 warnings
+tests/test_slice_12_external_target_source.py: 48 warnings
 tests/test_slice_13_adapter_preflight.py: 3 warnings
 tests/test_slice_14_adapter_replay.py: 42 warnings
 tests/test_slice_15_replay_command_context.py: 30 warnings
@@ -57,8 +57,8 @@ tests/test_slice_21_replay_mismatch_artifact_status.py: 4 warnings
 tests/test_slice_22_cli_replay_receipt_validation.py: 2 warnings
 tests/test_slice_23_verify_receipts_malformed_json.py: 1 warning
 tests/test_slice_24_cli_adapter_load_validation.py: 2 warnings
-  /home/charlie/Forge/ecosystem/failureforge/src/failureforge/validation/schemas.py:51: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
+  /home/charlie/Forge/ecosystem/failureforge/src/failureforge/validation/schemas.py:52: DeprecationWarning: jsonschema.RefResolver is deprecated as of v4.18.0, in favor of the https://github.com/python-jsonschema/referencing library, which provides more compliant referencing behavior as well as more flexible APIs for customization. A future release will remove RefResolver. Please file a feature request (on referencing) if you are missing an API for the kind of customization you need.
     return jsonschema.RefResolver(base_uri=base_uri, referrer=schema, store=store)
 
 -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
-======================= 95 passed, 954 warnings in 1.86s =======================
+======================= 95 passed, 972 warnings in 1.94s =======================

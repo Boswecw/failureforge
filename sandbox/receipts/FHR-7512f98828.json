@@ -1,0 +1,25 @@
+{
+  "actual_result": "registry rejected as expected: KeyError('missing required field: value')",
+  "agent_lane": "edge_case",
+  "artifact_paths": [
+    "sandbox/runs/SR-03b9c9ad73/stdout.log",
+    "sandbox/runs/SR-03b9c9ad73/stderr.log"
+  ],
+  "classification": "no_failure_observed",
+  "created_at": "2026-05-20T17:33:10.627191Z",
+  "exit_code": 0,
+  "expected_result": "ValueError or rejection.",
+  "failure_case_id": "FC-0002",
+  "promotion_status": "pending_operator_review",
+  "receipt_hash": "d5f239c6e9c3bf055689ef9db5d5605ca9422db3622b7d8515367767858101c3",
+  "receipt_id": "FHR-7512f98828",
+  "repro_command": "./scripts/replay_failure.sh sandbox/receipts/FHR-7512f98828.json",
+  "reproducible": true,
+  "sandbox_run_id": "SR-03b9c9ad73",
+  "schema_version": "FailureHarvestReceipt.v1",
+  "severity": "info",
+  "stderr_excerpt": "",
+  "stdout_excerpt": "",
+  "target_ref": "ci-gate",
+  "target_repo": "example-repo"
+}
