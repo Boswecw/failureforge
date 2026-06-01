@@ -1,6 +1,0 @@
-{
-  "sandbox_run_id": "SR-e56295f7e9",
-  "receipts": 6,
-  "report_json": "sandbox/reports/HR-f5277964ba.json",
-  "report_md": "sandbox/reports/HR-f5277964ba.md"
-}

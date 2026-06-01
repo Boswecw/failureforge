@@ -71,6 +71,10 @@ def _receipt() -> dict:
 
 
 def _service():
+    # The FailureForgeService lives in the sibling dataforge-Local repo. Skip
+    # cleanly when running failureforge standalone (e.g. in its own CI).
+    if not _DATAFORGE_LOCAL.exists():
+        pytest.skip("dataforge-Local sibling repo not present; cross-repo integration test")
     from app.failureforge.service import FailureForgeService, WriteAccepted, WriteRejected
 
     return FailureForgeService(), WriteAccepted, WriteRejected
