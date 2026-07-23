@@ -1,9 +1,8 @@
 # FailureForge
 
 Sandbox-only failure-harvesting subsystem and read-only governance evidence
-bridge for Forge. Per the
-`docs/plans/failureforge_repo_reconciled_plan_set` plan, this directory
-implements Slices 01-24:
+bridge for Forge. Implementation-complete planning artifacts are archived under
+`Drive/Forge/Plans/Implemented/failureforge` (see `docs/plans/IMPLEMENTED_PLAN_ARCHIVES.md`). This directory implements Slices 01-24:
 
 - **Slice 01** - `FailureCase.v1`, `FailureHarvestReceipt.v1`, `SandboxRun.v1`,
   `HardeningReport.v1` contracts, Edge-Case Agent, sandbox run script, replay
