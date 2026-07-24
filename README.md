@@ -1,9 +1,8 @@
 # FailureForge
 
 Sandbox-only failure-harvesting subsystem and read-only governance evidence
-bridge for Forge. Per the
-`docs/plans/failureforge_repo_reconciled_plan_set` plan, this directory
-implements Slices 01-24:
+bridge for Forge. Implementation-complete planning artifacts are archived under
+`Drive/Forge/Plans/Implemented/failureforge` (see `docs/plans/IMPLEMENTED_PLAN_ARCHIVES.md`). This directory implements Slices 01-24:
 
 - **Slice 01** - `FailureCase.v1`, `FailureHarvestReceipt.v1`, `SandboxRun.v1`,
   `HardeningReport.v1` contracts, Edge-Case Agent, sandbox run script, replay
@@ -82,6 +81,29 @@ implements Slices 01-24:
 - Receipt verification reports malformed JSON as a validation failure without a
   traceback.
 - Adapter file load failures return controlled CLI validation errors.
+
+## Execution isolation (read this before pointing it at untrusted targets)
+
+The "sandbox" is a **filesystem copy**, not an OS isolation boundary. The runner
+copies the target into `sandbox/workspaces/` and then imports and executes the
+target's `registry.py` **in-process**, with the full privileges of the runner.
+Nothing constrains what that code can do — it can open sockets, write outside the
+workspace, or spawn processes.
+
+The `canonical_source_hash_before`/`_after` guard is **detective, not
+preventive**, and it is scoped only to the canonical *source tree*: it fails the
+run (exit `5`) if that directory changed during execution, but it does not stop a
+target from causing other side effects. The demo target ships intentionally safe
+code. **Before running a non-demo or untrusted target, wrap the run in real OS
+isolation** (container, seccomp, read-only root FS, no network).
+
+## Cross-repo slices
+
+Slices 04–06 and the governance-reconciliation half of Slice 10 exercise the
+FailureForge → DataForge Local handshake, whose service/router code lives in the
+sibling **`dataforge-Local`** repo (and needs FastAPI). Those tests skip cleanly
+when this repo is checked out standalone (e.g. in its own CI); they run when
+`dataforge-Local` is present alongside this repo and FastAPI is installed.
 
 ## Layout
 

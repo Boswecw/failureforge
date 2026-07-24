@@ -7,9 +7,10 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
-import jsonschema
 from jsonschema import Draft7Validator
 from jsonschema.exceptions import ValidationError as _JSValidationError
+from referencing import Registry, Resource
+from referencing.jsonschema import DRAFT7
 
 _SCHEMA_ROOT = Path(__file__).resolve().parents[3] / "schemas"
 
@@ -39,22 +40,23 @@ def _path(path) -> str:  # noqa: ANN001
     return "/" + "/".join(str(p) for p in path)
 
 
-def _resolver_for(schema: dict[str, Any]) -> jsonschema.RefResolver:
-    """Pre-populate the RefResolver store with every sibling schema so
-    ``{"$ref": "Other.v1.schema.json"}`` references work across files."""
-    base_uri = _SCHEMA_ROOT.as_uri() + "/"
-    store: dict[str, dict[str, Any]] = {}
+@lru_cache(maxsize=1)
+def _schema_registry() -> Registry:
+    """Build a ``referencing`` Registry of every sibling schema, keyed by its
+    bare filename so cross-file ``{"$ref": "Other.v1.schema.json"}`` links
+    resolve. Replaces the deprecated ``jsonschema.RefResolver``."""
+    resources = []
     for path in sorted(_SCHEMA_ROOT.glob("*.schema.json")):
-        try:
-            store[base_uri + path.name] = _load(path.name)
-        except FileNotFoundError:
-            continue
-    return jsonschema.RefResolver(base_uri=base_uri, referrer=schema, store=store)
+        resource = Resource.from_contents(
+            _load(path.name), default_specification=DRAFT7
+        )
+        resources.append((path.name, resource))
+    return Registry().with_resources(resources)
 
 
 def _validate(schema_name: str, doc: Any) -> None:
     schema = _load(schema_name)
-    validator = Draft7Validator(schema, resolver=_resolver_for(schema))
+    validator = Draft7Validator(schema, registry=_schema_registry())
     try:
         validator.validate(doc)
     except _JSValidationError as exc:
