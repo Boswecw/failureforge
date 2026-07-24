@@ -12,14 +12,15 @@ from jsonschema.exceptions import ValidationError as _JSValidationError
 from referencing import Registry, Resource
 from referencing.jsonschema import DRAFT7
 
-
 _SCHEMA_ROOT = Path(__file__).resolve().parents[3] / "schemas"
 
 
 class SchemaValidationError(Exception):
     """Raised when a record fails contract validation."""
 
-    def __init__(self, schema_name: str, message: str, *, field_path: str | None = None):
+    def __init__(
+        self, schema_name: str, message: str, *, field_path: str | None = None
+    ):
         super().__init__(f"{schema_name}: {message}")
         self.schema_name = schema_name
         self.message = message

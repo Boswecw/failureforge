@@ -20,7 +20,6 @@ from failureforge.reporting.scorer import (
 )
 from failureforge.validation import apply_receipt_hash
 
-
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 
 

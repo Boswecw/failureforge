@@ -24,7 +24,6 @@ from failureforge.validation import (
     validate_failureforge_to_era_export,
 )
 
-
 _ROOT = Path(__file__).resolve().parents[1]
 
 
@@ -140,9 +139,9 @@ def test_era_export_builder_preserves_classification_and_blocks_autofix(tmp_path
         "efficiency",
         "cross_lane",
     }
-    assert {
-        c["source_classification"] for c in export["era_candidate_findings"]
-    } == {"duplicate_replay"}
+    assert {c["source_classification"] for c in export["era_candidate_findings"]} == {
+        "duplicate_replay"
+    }
     assert all(c["safe_to_autofix"] is False for c in export["era_candidate_findings"])
 
     path = write_era_export(export=export, sandbox_root=tmp_path)

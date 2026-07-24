@@ -7,17 +7,18 @@ sandbox-copied workspace.
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any, Callable, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
     from failureforge.runtime.sandbox import AttackOutcome
 
 
 def _utc_now() -> str:
-    return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+    return datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%S.%fZ")
 
 
 @dataclass
@@ -98,7 +99,11 @@ class EdgeCaseAgent:
                 attack_type="unknown_enum",
                 attack_description="Submit a record with an unknown `kind` enum value.",
                 expected_result="ValueError or rejection.",
-                attack_input={"key": "K3", "value": "V3", "kind": "not_an_allowed_kind"},
+                attack_input={
+                    "key": "K3",
+                    "value": "V3",
+                    "kind": "not_an_allowed_kind",
+                },
             )
         )
         cases.append(
@@ -139,16 +144,15 @@ class EdgeCaseAgent:
         )
         return cases
 
-
     # Slice 07 — protocol surface so SandboxRunner can drive multiple lanes
     # uniformly. Each FailureCase becomes one AttackOutcome via the existing
     # ``run_attack_against_target`` helper.
     lane: str = "edge_case"
 
-    def produce(self, *, workspace: Path, target_repo: str) -> list["AttackOutcome"]:
+    def produce(self, *, workspace: Path, target_repo: str) -> list[AttackOutcome]:
         from failureforge.runtime.sandbox import run_attack_against_target
 
-        outcomes: list["AttackOutcome"] = []
+        outcomes: list[AttackOutcome] = []
         for spec in self.generate_default_catalog():
             outcomes.append(run_attack_against_target(workspace=workspace, case=spec))
         return outcomes

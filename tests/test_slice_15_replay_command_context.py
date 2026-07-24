@@ -9,7 +9,6 @@ from pathlib import Path
 
 from failureforge.runtime import SandboxRunner, load_target_adapter
 
-
 _ROOT = Path(__file__).resolve().parents[1]
 
 

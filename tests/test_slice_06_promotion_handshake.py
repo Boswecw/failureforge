@@ -13,7 +13,9 @@ _DATAFORGE_LOCAL = _REPO_ROOT / "dataforge-Local"
 # This slice exercises the FailureForge -> DataForge Local handshake, which lives
 # in the sibling ``dataforge-Local`` repo and needs FastAPI. Skip cleanly when
 # running this repo standalone (e.g. in its own CI) so collection stays green.
-pytest.importorskip("fastapi", reason="dataforge-Local integration test requires fastapi")
+pytest.importorskip(
+    "fastapi", reason="dataforge-Local integration test requires fastapi"
+)
 if not _DATAFORGE_LOCAL.exists():
     pytest.skip(
         "dataforge-Local sibling repo not present; cross-repo integration test",
@@ -34,7 +36,6 @@ from failureforge.promotion import (  # noqa: E402
     build_promotion_candidate,
 )
 from failureforge.runtime.sandbox import SandboxRunner  # noqa: E402
-
 
 _FF_ROOT = Path(__file__).resolve().parents[1]
 

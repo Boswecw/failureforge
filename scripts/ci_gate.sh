@@ -39,6 +39,8 @@ run_step() {
 }
 
 run_step dependency_check 2 python3 -c "import jsonschema, httpx, pytest; import failureforge"
+run_step ruff_check 6 ruff check src tests
+run_step ruff_format 7 ruff format --check src tests
 run_step doc_build 1 bash doc/system/BUILD.sh
 run_step pytest 1 python3 -m pytest
 run_step sandbox_run 1 bash scripts/run_sandbox_once.sh example-repo ci-gate
@@ -62,6 +64,8 @@ run_step no_canonical_mutation 5 bash scripts/verify_no_canonical_mutation.sh
   echo
   echo "- status: passed"
   echo "- dependency_check: $(cat "$OUT/dependency_check_exit.txt")"
+  echo "- ruff_check: $(cat "$OUT/ruff_check_exit.txt")"
+  echo "- ruff_format: $(cat "$OUT/ruff_format_exit.txt")"
   echo "- pytest: $(cat "$OUT/pytest_exit.txt")"
   echo "- sandbox_run: $(cat "$OUT/sandbox_run_exit.txt")"
   echo "- receipt_verify: $(cat "$OUT/receipt_verify_exit.txt")"

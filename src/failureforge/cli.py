@@ -15,17 +15,17 @@ from failureforge.forgecommand import (
     render_receipt_detail_text,
     render_run_detail_text,
 )
-from failureforge.runtime.replay import replay_receipt
-from failureforge.runtime.sandbox import CanonicalSourceMutationError, SandboxRunner
-from failureforge.runtime.target_adapter import load_target_adapter
 from failureforge.reporting.scorer import (
     build_hardening_report,
     load_and_verify_receipts,
     write_hardening_artifacts,
 )
+from failureforge.runtime.replay import replay_receipt
+from failureforge.runtime.sandbox import CanonicalSourceMutationError, SandboxRunner
+from failureforge.runtime.target_adapter import load_target_adapter
 from failureforge.validation import (
-    SchemaValidationError,
     ReceiptHashMismatch,
+    SchemaValidationError,
     validate_failure_receipt,
     verify_receipt_hash,
 )
@@ -96,17 +96,26 @@ def cmd_run_sandbox(args: argparse.Namespace) -> int:
     report = build_hardening_report(
         sandbox_run_id=result["sandbox_run"]["sandbox_run_id"],
         target_repo=args.target,
-        receipts=[r for r in receipts if r["sandbox_run_id"] == result["sandbox_run"]["sandbox_run_id"]],
+        receipts=[
+            r
+            for r in receipts
+            if r["sandbox_run_id"] == result["sandbox_run"]["sandbox_run_id"]
+        ],
     )
     json_path, md_path = write_hardening_artifacts(
         report=report, sandbox_root=sandbox_root
     )
-    print(json.dumps({
-        "sandbox_run_id": result["sandbox_run"]["sandbox_run_id"],
-        "receipts": len(result["receipt_paths"]),
-        "report_json": str(json_path.relative_to(root)),
-        "report_md": str(md_path.relative_to(root)),
-    }, indent=2))
+    print(
+        json.dumps(
+            {
+                "sandbox_run_id": result["sandbox_run"]["sandbox_run_id"],
+                "receipts": len(result["receipt_paths"]),
+                "report_json": str(json_path.relative_to(root)),
+                "report_md": str(md_path.relative_to(root)),
+            },
+            indent=2,
+        )
+    )
     return 0
 
 
@@ -237,7 +246,9 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="failureforge")
     sub = parser.add_subparsers(dest="cmd", required=True)
 
-    p_run = sub.add_parser("run-sandbox", help="copy target, run edge-case agent, emit receipts + report")
+    p_run = sub.add_parser(
+        "run-sandbox", help="copy target, run edge-case agent, emit receipts + report"
+    )
     p_run.add_argument("--target", required=True)
     p_run.add_argument("--source-ref", default="local")
     p_run.add_argument("--run-id", default=None)
@@ -249,7 +260,9 @@ def main(argv: list[str] | None = None) -> int:
     )
     p_run.set_defaults(func=cmd_run_sandbox)
 
-    p_replay = sub.add_parser("replay", help="re-run an attack from a FailureHarvestReceipt")
+    p_replay = sub.add_parser(
+        "replay", help="re-run an attack from a FailureHarvestReceipt"
+    )
     p_replay.add_argument("receipt_path")
     p_replay.add_argument(
         "--target-source",
@@ -259,10 +272,14 @@ def main(argv: list[str] | None = None) -> int:
     p_replay.add_argument("--adapter", default=None, help="TargetAdapter.v1 JSON path")
     p_replay.set_defaults(func=cmd_replay)
 
-    p_verify = sub.add_parser("verify-receipts", help="validate every receipt's schema + hash")
+    p_verify = sub.add_parser(
+        "verify-receipts", help="validate every receipt's schema + hash"
+    )
     p_verify.set_defaults(func=cmd_verify)
 
-    p_morning = sub.add_parser("morning-report", help="operator morning view: recent runs + top findings")
+    p_morning = sub.add_parser(
+        "morning-report", help="operator morning view: recent runs + top findings"
+    )
     p_morning.add_argument("--dataforge-url", default="http://127.0.0.1:8005")
     p_morning.add_argument("--target-repo", default=None)
     p_morning.add_argument("--runs", type=int, default=10)
@@ -276,7 +293,9 @@ def main(argv: list[str] | None = None) -> int:
     p_run_view.add_argument("--json", action="store_true")
     p_run_view.set_defaults(func=cmd_view_run)
 
-    p_receipt_view = sub.add_parser("view-receipt", help="operator detail for one receipt")
+    p_receipt_view = sub.add_parser(
+        "view-receipt", help="operator detail for one receipt"
+    )
     p_receipt_view.add_argument("receipt_id")
     p_receipt_view.add_argument("--dataforge-url", default="http://127.0.0.1:8005")
     p_receipt_view.add_argument("--json", action="store_true")

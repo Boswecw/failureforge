@@ -22,7 +22,6 @@ from pathlib import Path
 from failureforge.agents.edge_case import EdgeCaseAgent, FailureCaseSpec
 from failureforge.runtime.sandbox import AttackOutcome, run_attack_against_target
 
-
 _CLASSIFIER_RULES: dict[str, tuple[str, str]] = {
     # attack_type -> (escalated_severity_for_real_failure, recommended_label)
     "duplicate_replay": ("critical", "unbounded_growth"),
@@ -56,11 +55,21 @@ class ClassificationAgent:
         already have raw outcomes."""
         return self._classify(outcome, outcome.failure_case)
 
-    def _classify(self, outcome: AttackOutcome, original: FailureCaseSpec) -> AttackOutcome:
+    def _classify(
+        self, outcome: AttackOutcome, original: FailureCaseSpec
+    ) -> AttackOutcome:
         rule = _CLASSIFIER_RULES.get(original.attack_type)
         if outcome.classification == "no_failure_observed" or rule is None:
-            severity = "info" if outcome.classification == "no_failure_observed" else outcome.severity
-            label = "no_failure_observed" if outcome.classification == "no_failure_observed" else "unclassified"
+            severity = (
+                "info"
+                if outcome.classification == "no_failure_observed"
+                else outcome.severity
+            )
+            label = (
+                "no_failure_observed"
+                if outcome.classification == "no_failure_observed"
+                else "unclassified"
+            )
             actual = f"{outcome.actual_result} | classifier_label={label}"
             spec = FailureCaseSpec(
                 failure_case_id=f"FC-CLASS-{original.failure_case_id}",

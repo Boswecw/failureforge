@@ -12,18 +12,18 @@ Doctrine constraints:
 
 from __future__ import annotations
 
+import hashlib
 import io
 import json
 import shlex
 import shutil
-import sys
 import traceback
+from collections.abc import Iterable
 from contextlib import redirect_stderr, redirect_stdout
 from dataclasses import dataclass
-from datetime import datetime, timezone
-import hashlib
+from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any, Iterable
+from typing import Any
 
 from failureforge.agents.edge_case import EdgeCaseAgent, FailureCaseSpec
 from failureforge.runtime.target_adapter import (
@@ -40,7 +40,7 @@ from failureforge.validation import (
 
 
 def _utc_now() -> str:
-    return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+    return datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%S.%fZ")
 
 
 def _stable_id(prefix: str, *parts: str) -> str:
@@ -69,7 +69,9 @@ class SandboxPaths:
     reports_dir: Path
 
     @classmethod
-    def for_run(cls, *, sandbox_root: Path, sandbox_run_id: str, target_repo: str) -> "SandboxPaths":
+    def for_run(
+        cls, *, sandbox_root: Path, sandbox_run_id: str, target_repo: str
+    ) -> SandboxPaths:
         ws = sandbox_root / "workspaces" / sandbox_run_id / target_repo
         run_dir = sandbox_root / "runs" / sandbox_run_id
         receipts_dir = sandbox_root / "receipts"
@@ -187,9 +189,7 @@ def run_attack_against_target(
             elif case.attack_type == "unknown_enum":
                 try:
                     registry.upsert(case.attack_input)
-                    actual = (
-                        "registry accepted an unknown enum value in `kind`"
-                    )
+                    actual = "registry accepted an unknown enum value in `kind`"
                 except (ValueError, KeyError) as exc:
                     classification = "no_failure_observed"
                     severity = "info"
@@ -197,9 +197,7 @@ def run_attack_against_target(
             elif case.attack_type == "bad_path":
                 try:
                     registry.upsert(case.attack_input)
-                    actual = (
-                        "registry accepted a path containing traversal escape"
-                    )
+                    actual = "registry accepted a path containing traversal escape"
                 except (ValueError, OSError) as exc:
                     classification = "no_failure_observed"
                     severity = "info"
@@ -208,7 +206,9 @@ def run_attack_against_target(
                 try:
                     registry.upsert(case.attack_input)
                     if any(
-                        "\x00" in v for v in registry.dump().values() if isinstance(v, str)
+                        "\x00" in v
+                        for v in registry.dump().values()
+                        if isinstance(v, str)
                     ):
                         actual = "registry stored a NUL byte unsanitised"
                     else:
@@ -228,7 +228,9 @@ def run_attack_against_target(
                     severity = "info"
                     actual = f"registry rejected as expected: {exc!r}"
             else:
-                actual = f"unsupported attack_type for edge_case agent: {case.attack_type}"
+                actual = (
+                    f"unsupported attack_type for edge_case agent: {case.attack_type}"
+                )
                 classification = "no_failure_observed"
                 severity = "low"
         exit_code = 0
@@ -331,7 +333,9 @@ class SandboxRunner:
             "sandbox_run_id": run_id,
             "target_repo": self._target_repo_name,
             "source_ref": self._source_ref,
-            "workspace_path": str(paths.workspace.relative_to(self._sandbox_root.parent)),
+            "workspace_path": str(
+                paths.workspace.relative_to(self._sandbox_root.parent)
+            ),
             "agent_lanes": lanes,
             "started_at": _utc_now(),
             "completed_at": None,
@@ -373,8 +377,12 @@ class SandboxRunner:
                 )
                 receipt_docs.append(self._build_receipt(paths, run_id, outcome))
 
-        (paths.run_dir / "stdout.log").write_text("\n".join(stdout_chunks), encoding="utf-8")
-        (paths.run_dir / "stderr.log").write_text("\n".join(stderr_chunks), encoding="utf-8")
+        (paths.run_dir / "stdout.log").write_text(
+            "\n".join(stdout_chunks), encoding="utf-8"
+        )
+        (paths.run_dir / "stderr.log").write_text(
+            "\n".join(stderr_chunks), encoding="utf-8"
+        )
 
         sandbox_run["completed_at"] = _utc_now()
         canonical_hash_after = _hash_tree(self._target_repo_source)
@@ -400,13 +408,19 @@ class SandboxRunner:
         (paths.run_dir / "sandbox_run.json").write_text(
             json.dumps(sandbox_run, indent=2, sort_keys=True), encoding="utf-8"
         )
-        return {"sandbox_run": sandbox_run, "receipt_paths": [str(p) for p in receipt_paths], "paths": paths}
+        return {
+            "sandbox_run": sandbox_run,
+            "receipt_paths": [str(p) for p in receipt_paths],
+            "paths": paths,
+        }
 
     def _invoke_agent(self, agent_obj: Any, workspace: Path) -> list[AttackOutcome]:
         # Back-compat shim: legacy EdgeCaseAgent has ``generate_default_catalog``;
         # Slice 07 agents implement ``produce``. Prefer ``produce`` when present.
         if hasattr(agent_obj, "produce"):
-            return agent_obj.produce(workspace=workspace, target_repo=self._target_repo_name)
+            return agent_obj.produce(
+                workspace=workspace, target_repo=self._target_repo_name
+            )
         outcomes: list[AttackOutcome] = []
         for spec in agent_obj.generate_default_catalog():
             outcomes.append(run_attack_against_target(workspace=workspace, case=spec))
@@ -447,8 +461,16 @@ class SandboxRunner:
             "reproducible": outcome.reproducible,
             "repro_command": repro_command,
             "artifact_paths": [
-                str((paths.run_dir / "stdout.log").relative_to(self._sandbox_root.parent)),
-                str((paths.run_dir / "stderr.log").relative_to(self._sandbox_root.parent)),
+                str(
+                    (paths.run_dir / "stdout.log").relative_to(
+                        self._sandbox_root.parent
+                    )
+                ),
+                str(
+                    (paths.run_dir / "stderr.log").relative_to(
+                        self._sandbox_root.parent
+                    )
+                ),
             ],
             "promotion_status": "pending_operator_review",
             "created_at": _utc_now(),
@@ -462,10 +484,14 @@ class SandboxRunner:
         out = paths.receipts_dir / f"{receipt_id}.json"
         return out, sealed
 
-    def _write_receipts(self, receipt_docs: list[tuple[Path, dict[str, Any]]]) -> list[Path]:
+    def _write_receipts(
+        self, receipt_docs: list[tuple[Path, dict[str, Any]]]
+    ) -> list[Path]:
         paths: list[Path] = []
         for path, sealed in receipt_docs:
-            path.write_text(json.dumps(sealed, indent=2, sort_keys=True), encoding="utf-8")
+            path.write_text(
+                json.dumps(sealed, indent=2, sort_keys=True), encoding="utf-8"
+            )
             paths.append(path)
         return paths
 

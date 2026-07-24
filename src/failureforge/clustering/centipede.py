@@ -13,14 +13,14 @@ from __future__ import annotations
 
 import hashlib
 from collections import Counter
-from datetime import datetime, timezone
-from typing import Any, Iterable
+from collections.abc import Iterable
+from datetime import UTC, datetime
+from typing import Any
 
 from failureforge.validation import (
     validate_fix_cluster_report,
     validate_root_cause_cluster,
 )
-
 
 _LANE_PREFIXES = ("FC-REPRO-", "FC-CLASS-", "FC-MUTATION-", "FC-CHAOS-")
 
@@ -184,7 +184,7 @@ def build_clusters(
 
 
 def _utc_now() -> str:
-    return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+    return datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%S.%fZ")
 
 
 def build_fix_cluster_report(
@@ -230,7 +230,9 @@ def render_fix_cluster_markdown(report: dict[str, Any]) -> str:
     ]
     if "top_severity" in report["summary"]:
         lines.append(f"- Top severity: {report['summary']['top_severity']}")
-        lines.append(f"- Top recommended fix: {report['summary']['top_recommended_fix']}")
+        lines.append(
+            f"- Top recommended fix: {report['summary']['top_recommended_fix']}"
+        )
     lines.extend(["", "## Clusters", ""])
     for c in report["clusters"]:
         lines.append(

@@ -7,8 +7,8 @@ routes."""
 from failureforge.forgecommand.client import (
     OperatorClient,
     render_morning_report_text,
-    render_run_detail_text,
     render_receipt_detail_text,
+    render_run_detail_text,
 )
 
 __all__ = [

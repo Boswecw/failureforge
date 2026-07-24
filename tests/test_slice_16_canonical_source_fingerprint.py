@@ -9,7 +9,6 @@ from pathlib import Path
 from failureforge.runtime import SandboxRunner, load_target_adapter
 from failureforge.validation import validate_sandbox_run
 
-
 _ROOT = Path(__file__).resolve().parents[1]
 _SHA256 = re.compile(r"^[0-9a-f]{64}$")
 
@@ -31,9 +30,10 @@ def test_sandbox_run_records_canonical_source_hashes(tmp_path: Path):
     validate_sandbox_run(sandbox_run)
     assert _SHA256.match(sandbox_run["canonical_source_hash_before"])
     assert _SHA256.match(sandbox_run["canonical_source_hash_after"])
-    assert sandbox_run["canonical_source_hash_before"] == sandbox_run[
-        "canonical_source_hash_after"
-    ]
+    assert (
+        sandbox_run["canonical_source_hash_before"]
+        == sandbox_run["canonical_source_hash_after"]
+    )
     assert sandbox_run["canonical_source_mutated"] is False
 
 
@@ -51,7 +51,8 @@ def test_external_adapter_run_records_source_hashes(tmp_path: Path):
     sandbox_run = result["sandbox_run"]
 
     validate_sandbox_run(sandbox_run)
-    assert sandbox_run["canonical_source_hash_before"] == sandbox_run[
-        "canonical_source_hash_after"
-    ]
+    assert (
+        sandbox_run["canonical_source_hash_before"]
+        == sandbox_run["canonical_source_hash_after"]
+    )
     assert sandbox_run["canonical_source_mutated"] is False

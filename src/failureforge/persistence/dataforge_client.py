@@ -10,14 +10,14 @@ from __future__ import annotations
 
 import json
 from dataclasses import dataclass, field
-from enum import Enum
+from enum import StrEnum
 from pathlib import Path
 from typing import Any
 
 import httpx
 
 
-class PushOutcome(str, Enum):
+class PushOutcome(StrEnum):
     accepted = "accepted"
     accepted_idempotent = "accepted_idempotent"
     rejected = "rejected"
@@ -51,7 +51,8 @@ class PushSummary:
         if self.report is not None:
             items.append(self.report)
         return all(
-            r.outcome in (PushOutcome.accepted, PushOutcome.accepted_idempotent) for r in items
+            r.outcome in (PushOutcome.accepted, PushOutcome.accepted_idempotent)
+            for r in items
         )
 
 
@@ -80,7 +81,7 @@ class DataForgeFailureForgeClient:
         if self._owns_client:
             self._client.close()
 
-    def __enter__(self) -> "DataForgeFailureForgeClient":
+    def __enter__(self) -> DataForgeFailureForgeClient:
         return self
 
     def __exit__(self, *exc: Any) -> None:
@@ -152,7 +153,9 @@ class DataForgeFailureForgeClient:
 
     # ---- helpers ----
 
-    def push_run_bundle_from_disk(self, *, run_id: str, sandbox_root: Path) -> PushSummary:
+    def push_run_bundle_from_disk(
+        self, *, run_id: str, sandbox_root: Path
+    ) -> PushSummary:
         run_path = sandbox_root / "runs" / run_id / "sandbox_run.json"
         run = json.loads(run_path.read_text(encoding="utf-8"))
 
@@ -168,7 +171,9 @@ class DataForgeFailureForgeClient:
         from failureforge.agents.edge_case import EdgeCaseAgent
 
         agent = EdgeCaseAgent(target_repo=run["target_repo"])
-        catalog = {c.failure_case_id: c.to_dict() for c in agent.generate_default_catalog()}
+        catalog = {
+            c.failure_case_id: c.to_dict() for c in agent.generate_default_catalog()
+        }
         case_ids = {r["failure_case_id"] for r in receipts}
         cases = [catalog[cid] for cid in case_ids if cid in catalog]
 
@@ -180,7 +185,9 @@ class DataForgeFailureForgeClient:
                 report = body
                 break
 
-        return self.push_run_bundle(run=run, cases=cases, receipts=receipts, report=report)
+        return self.push_run_bundle(
+            run=run, cases=cases, receipts=receipts, report=report
+        )
 
     # ---- internals ----
 
@@ -208,7 +215,11 @@ class DataForgeFailureForgeClient:
         except Exception:
             body = {}
 
-        if response.status_code == 200 and isinstance(body, dict) and body.get("record_type") == record_type:
+        if (
+            response.status_code == 200
+            and isinstance(body, dict)
+            and body.get("record_type") == record_type
+        ):
             return PushResult(
                 outcome=PushOutcome.accepted,
                 record_type=record_type,
@@ -227,10 +238,17 @@ class DataForgeFailureForgeClient:
 
         err_body: dict[str, Any] = {}
         if isinstance(body, dict):
-            err_body = body.get("detail", body) if isinstance(body.get("detail"), dict) else body
+            err_body = (
+                body.get("detail", body)
+                if isinstance(body.get("detail"), dict)
+                else body
+            )
 
         # Receipt double-push with same hash -> accepted_idempotent.
-        if response.status_code == 409 and err_body.get("error_class") == "receipt_immutable":
+        if (
+            response.status_code == 409
+            and err_body.get("error_class") == "receipt_immutable"
+        ):
             return PushResult(
                 outcome=PushOutcome.rejected,
                 record_type=record_type,

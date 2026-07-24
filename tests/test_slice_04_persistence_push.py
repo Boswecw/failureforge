@@ -17,7 +17,9 @@ _DATAFORGE_LOCAL = _REPO_ROOT / "dataforge-Local"
 # This slice exercises the FailureForge -> DataForge Local handshake, which lives
 # in the sibling ``dataforge-Local`` repo and needs FastAPI. Skip cleanly when
 # running this repo standalone (e.g. in its own CI) so collection stays green.
-pytest.importorskip("fastapi", reason="dataforge-Local integration test requires fastapi")
+pytest.importorskip(
+    "fastapi", reason="dataforge-Local integration test requires fastapi"
+)
 if not _DATAFORGE_LOCAL.exists():
     pytest.skip(
         "dataforge-Local sibling repo not present; cross-repo integration test",
@@ -34,7 +36,6 @@ from failureforge.persistence import (  # noqa: E402
     PushOutcome,
 )
 from failureforge.runtime.sandbox import SandboxRunner  # noqa: E402
-
 
 _FF_ROOT = Path(__file__).resolve().parents[1]
 
@@ -59,7 +60,9 @@ def client(app: FastAPI) -> DataForgeFailureForgeClient:
     return DataForgeFailureForgeClient(http_client=TestClient(app))
 
 
-def test_full_run_bundle_push_round_trip(tmp_path: Path, client: DataForgeFailureForgeClient, app: FastAPI):
+def test_full_run_bundle_push_round_trip(
+    tmp_path: Path, client: DataForgeFailureForgeClient, app: FastAPI
+):
     """Run the sandbox into a tmp sandbox root, then push the whole bundle
     (run + cases + receipts + report) to DataForge Local in one call."""
     from failureforge.reporting.scorer import (
@@ -75,7 +78,7 @@ def test_full_run_bundle_push_round_trip(tmp_path: Path, client: DataForgeFailur
         target_repo_name="example-repo",
         target_repo_source=_FF_ROOT / "sandbox-targets" / "example-repo",
     )
-    result = runner.run(sandbox_run_id="SR-push-001")
+    runner.run(sandbox_run_id="SR-push-001")
     receipts = load_and_verify_receipts(sandbox / "receipts")
     report = build_hardening_report(
         sandbox_run_id="SR-push-001",
@@ -129,7 +132,9 @@ def test_push_is_non_blocking_when_dataforge_unreachable(tmp_path: Path):
         bad.close()
 
 
-def test_promotion_transition_via_client(tmp_path: Path, client: DataForgeFailureForgeClient, app: FastAPI):
+def test_promotion_transition_via_client(
+    tmp_path: Path, client: DataForgeFailureForgeClient, app: FastAPI
+):
     sandbox = tmp_path / "sandbox"
     sandbox.mkdir()
     runner = SandboxRunner(
@@ -137,13 +142,15 @@ def test_promotion_transition_via_client(tmp_path: Path, client: DataForgeFailur
         target_repo_name="example-repo",
         target_repo_source=_FF_ROOT / "sandbox-targets" / "example-repo",
     )
-    result = runner.run(sandbox_run_id="SR-promo")
+    runner.run(sandbox_run_id="SR-promo")
     client.push_run_bundle_from_disk(run_id="SR-promo", sandbox_root=sandbox)
 
-    receipt_id = next(iter(app.state.failureforge_service.list_receipts(sandbox_run_id="SR-promo")))[
-        "receipt_id"
-    ]
-    res = client.transition_promotion_status(receipt_id, new_status="approved_for_test_generation")
+    receipt_id = next(
+        iter(app.state.failureforge_service.list_receipts(sandbox_run_id="SR-promo"))
+    )["receipt_id"]
+    res = client.transition_promotion_status(
+        receipt_id, new_status="approved_for_test_generation"
+    )
     assert res.outcome == PushOutcome.accepted
     rec = app.state.failureforge_service.get_receipt(receipt_id)
     assert rec["promotion_status"] == "approved_for_test_generation"

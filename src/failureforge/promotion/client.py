@@ -3,13 +3,13 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from enum import Enum
+from enum import StrEnum
 from typing import Any
 
 import httpx
 
 
-class PromotionPushOutcome(str, Enum):
+class PromotionPushOutcome(StrEnum):
     accepted = "accepted"
     accepted_idempotent = "accepted_idempotent"
     rejected = "rejected"
@@ -79,7 +79,9 @@ class _BaseClient:
         record_id: str | None,
     ) -> PromotionPushResult:
         try:
-            resp = self._client.post(path, json=payload, headers=self._identity_headers())
+            resp = self._client.post(
+                path, json=payload, headers=self._identity_headers()
+            )
         except httpx.HTTPError as exc:
             return PromotionPushResult(
                 outcome=PromotionPushOutcome.transport_failure,
@@ -101,7 +103,11 @@ class _BaseClient:
             )
         err_body: dict[str, Any] = {}
         if isinstance(body, dict):
-            err_body = body.get("detail", body) if isinstance(body.get("detail"), dict) else body
+            err_body = (
+                body.get("detail", body)
+                if isinstance(body.get("detail"), dict)
+                else body
+            )
         return PromotionPushResult(
             outcome=PromotionPushOutcome.rejected,
             record_type=record_type,

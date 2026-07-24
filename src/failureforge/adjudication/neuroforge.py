@@ -12,8 +12,9 @@ from __future__ import annotations
 import hashlib
 import json
 from collections import Counter
-from datetime import datetime, timezone
-from typing import Any, Iterable
+from collections.abc import Iterable
+from datetime import UTC, datetime
+from typing import Any
 
 from failureforge.validation import (
     apply_model_adjudication_hash,
@@ -21,7 +22,6 @@ from failureforge.validation import (
     validate_neuroforge_adjudication_report,
     validate_root_cause_cluster,
 )
-
 
 _CLASSIFICATIONS = {
     "state_failure",
@@ -47,7 +47,7 @@ def _canonical(payload: Any) -> bytes:
 
 
 def _utc_now() -> str:
-    return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+    return datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%S.%fZ")
 
 
 def _stable_id(prefix: str, *parts: str) -> str:
@@ -72,7 +72,9 @@ def _normalise_verdict(verdict: dict[str, Any]) -> dict[str, Any]:
     }
     missing = sorted(required - set(verdict))
     if missing:
-        raise ValueError(f"provider verdict missing required field(s): {', '.join(missing)}")
+        raise ValueError(
+            f"provider verdict missing required field(s): {', '.join(missing)}"
+        )
 
     classification = str(verdict["proposed_classification"])
     if classification not in _CLASSIFICATIONS:
@@ -163,7 +165,9 @@ def _consensus(values: Iterable[str]) -> str:
 
 def _job_id_for(cluster: dict[str, Any], verdicts: list[dict[str, Any]]) -> str:
     hashes = sorted(provider_result_hash(v) for v in verdicts)
-    return _stable_id("NFJ", cluster["cluster_id"], cluster["cluster_fingerprint"], *hashes)
+    return _stable_id(
+        "NFJ", cluster["cluster_id"], cluster["cluster_fingerprint"], *hashes
+    )
 
 
 def run_provider_comparison_job(

@@ -10,7 +10,6 @@ import pytest
 
 from failureforge.validation import apply_receipt_hash
 
-
 _ROOT = Path(__file__).resolve().parents[1]
 _ECOSYSTEM = _ROOT.parent
 _DATAFORGE_LOCAL = _ECOSYSTEM / "dataforge-Local"
@@ -74,8 +73,14 @@ def _service():
     # The FailureForgeService lives in the sibling dataforge-Local repo. Skip
     # cleanly when running failureforge standalone (e.g. in its own CI).
     if not _DATAFORGE_LOCAL.exists():
-        pytest.skip("dataforge-Local sibling repo not present; cross-repo integration test")
-    from app.failureforge.service import FailureForgeService, WriteAccepted, WriteRejected
+        pytest.skip(
+            "dataforge-Local sibling repo not present; cross-repo integration test"
+        )
+    from app.failureforge.service import (
+        FailureForgeService,
+        WriteAccepted,
+        WriteRejected,
+    )
 
     return FailureForgeService(), WriteAccepted, WriteRejected
 
@@ -161,7 +166,9 @@ def test_failurecase_schema_did_not_gain_new_attack_family():
 
 def test_governance_docs_state_failureforge_role():
     readme = (_ROOT / "README.md").read_text(encoding="utf-8")
-    system = (_ROOT / "doc/system/00-purpose.md").read_text(encoding="utf-8")
+    system = (_ROOT / "doc/system/00_overview/00-purpose.md").read_text(
+        encoding="utf-8"
+    )
 
     assert "Sandbox-only" in readme or "sandbox-only" in readme
     assert "may not mutate canonical repositories" in system

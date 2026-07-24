@@ -14,7 +14,9 @@ _DATAFORGE_LOCAL = _REPO_ROOT / "dataforge-Local"
 # This slice exercises the FailureForge -> DataForge Local handshake, which lives
 # in the sibling ``dataforge-Local`` repo and needs FastAPI. Skip cleanly when
 # running this repo standalone (e.g. in its own CI) so collection stays green.
-pytest.importorskip("fastapi", reason="dataforge-Local integration test requires fastapi")
+pytest.importorskip(
+    "fastapi", reason="dataforge-Local integration test requires fastapi"
+)
 if not _DATAFORGE_LOCAL.exists():
     pytest.skip(
         "dataforge-Local sibling repo not present; cross-repo integration test",
@@ -34,7 +36,6 @@ from failureforge.forgecommand import (  # noqa: E402
 )
 from failureforge.persistence import DataForgeFailureForgeClient  # noqa: E402
 from failureforge.runtime.sandbox import SandboxRunner  # noqa: E402
-
 
 _FF_ROOT = Path(__file__).resolve().parents[1]
 
@@ -90,7 +91,9 @@ def http(app: FastAPI) -> TestClient:
 # ---- client + renderer round trips -----------------------------------
 
 
-def test_operator_client_morning_report_includes_top_finding(tmp_path: Path, http: TestClient):
+def test_operator_client_morning_report_includes_top_finding(
+    tmp_path: Path, http: TestClient
+):
     _seed_one_run(http, tmp_path)
     op = OperatorClient(http=http)
     view = op.morning_report()
@@ -112,7 +115,9 @@ def test_operator_client_run_detail_renders(tmp_path: Path, http: TestClient):
     assert "Receipts:" in text
 
 
-def test_operator_client_receipt_detail_includes_copy_paste_replay(tmp_path: Path, http: TestClient):
+def test_operator_client_receipt_detail_includes_copy_paste_replay(
+    tmp_path: Path, http: TestClient
+):
     _seed_one_run(http, tmp_path)
     op = OperatorClient(http=http)
     runs = op.list_runs()
@@ -128,7 +133,9 @@ def test_operator_client_receipt_detail_includes_copy_paste_replay(tmp_path: Pat
 # ---- CLI surface -----------------------------------------------------
 
 
-def test_cli_morning_report_subcommand(tmp_path: Path, http: TestClient, monkeypatch, capsys):
+def test_cli_morning_report_subcommand(
+    tmp_path: Path, http: TestClient, monkeypatch, capsys
+):
     _seed_one_run(http, tmp_path)
 
     # Patch the CLI's OperatorClient creator to use our TestClient.
@@ -146,7 +153,9 @@ def test_cli_morning_report_subcommand(tmp_path: Path, http: TestClient, monkeyp
     assert "Replay:" in captured.out
 
 
-def test_cli_view_run_and_view_receipt(tmp_path: Path, http: TestClient, monkeypatch, capsys):
+def test_cli_view_run_and_view_receipt(
+    tmp_path: Path, http: TestClient, monkeypatch, capsys
+):
     _seed_one_run(http, tmp_path)
     from failureforge import cli as cli_mod
 

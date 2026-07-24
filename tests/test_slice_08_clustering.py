@@ -5,8 +5,6 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-import pytest
-
 from failureforge.agents import (
     ChaosAgent,
     ClassificationAgent,
@@ -27,7 +25,6 @@ from failureforge.validation import (
     validate_fix_cluster_report,
     validate_root_cause_cluster,
 )
-
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 

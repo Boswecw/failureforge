@@ -15,7 +15,6 @@ from failureforge.runtime import (
 )
 from failureforge.validation import SchemaValidationError, validate_target_adapter
 
-
 _ROOT = Path(__file__).resolve().parents[1]
 
 

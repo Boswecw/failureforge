@@ -11,6 +11,7 @@ dependencies = [
 [project.optional-dependencies]
 dev = [
     "pytest>=8.0,<10.0",
+    "ruff>=0.6,<1.0",
 ]
 
 [build-system]
@@ -22,3 +23,27 @@ where = ["src"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+
+[tool.ruff]
+# Line length matches the codebase's existing wrap convention (Black-style).
+line-length = 88
+target-version = "py311"
+extend-exclude = ["sandbox", "reports", "doc/FFGSYSTEM.md"]
+
+[tool.ruff.lint]
+# Start with the conservative subset: pyflakes, pycodestyle errors, isort,
+# bugbear, comprehensions, pyupgrade. Skip stylistic-only rules until the
+# tree settles.
+select = ["E", "F", "I", "B", "C4", "UP"]
+ignore = [
+    # Line length handled by formatter, not lint.
+    "E501",
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["B011"]  # assert False is fine in tests
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "lf"

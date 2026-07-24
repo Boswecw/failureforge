@@ -60,16 +60,12 @@ class ReproductionAgent:
             classification = last_outcome.classification
             severity = last_outcome.severity
             reproducible = True
-            actual = (
-                f"deterministic across {self._repeats} runs: {actuals[0]}"
-            )
+            actual = f"deterministic across {self._repeats} runs: {actuals[0]}"
         elif "no_failure_observed" in classifications and len(classifications) > 1:
             classification = last_outcome.classification
             severity = "medium"
             reproducible = False
-            actual = (
-                f"intermittent across {self._repeats} runs: outcomes={dict(classifications)}"
-            )
+            actual = f"intermittent across {self._repeats} runs: outcomes={dict(classifications)}"
         else:
             classification = last_outcome.classification
             severity = "info" if classification == "no_failure_observed" else "low"

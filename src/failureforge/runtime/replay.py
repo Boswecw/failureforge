@@ -124,7 +124,9 @@ def _reconstruct_failure_case_from_receipt(receipt: dict[str, Any]) -> dict[str,
     catalog = agent.generate_default_catalog()
     by_id = {c.failure_case_id: c for c in catalog}
     if receipt["failure_case_id"] in by_id:
-        return by_id[receipt["failure_case_id"]].to_dict(created_at=receipt["created_at"])
+        return by_id[receipt["failure_case_id"]].to_dict(
+            created_at=receipt["created_at"]
+        )
     raise KeyError(
         f"failure_case_id {receipt['failure_case_id']} is not in the default edge-case catalog"
     )

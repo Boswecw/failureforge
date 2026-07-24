@@ -8,10 +8,8 @@ never touched.
 from __future__ import annotations
 
 import io
-import traceback
 from contextlib import redirect_stderr, redirect_stdout
 from pathlib import Path
-from typing import Any
 
 from failureforge.agents.edge_case import FailureCaseSpec
 from failureforge.runtime.sandbox import AttackOutcome
@@ -26,7 +24,9 @@ class _SimulatedTimeoutError(Exception):
 class ChaosAgent:
     lane: str = "chaos"
 
-    def __init__(self, *, target_repo: str, target_area: str = "registry_runtime") -> None:
+    def __init__(
+        self, *, target_repo: str, target_area: str = "registry_runtime"
+    ) -> None:
         self._target_repo = target_repo
         self._target_area = target_area
 
@@ -103,11 +103,11 @@ class ChaosAgent:
         patch_kind: str,
     ) -> AttackOutcome:
         registry_mod = load_registry_module(workspace)
-        Registry = getattr(registry_mod, "Registry")
+        Registry = registry_mod.Registry
 
         registry = Registry()
         # Drive a single baseline upsert so we have a reference state.
-        baseline_id = registry.upsert({"key": "K-baseline", "value": "B"})
+        registry.upsert({"key": "K-baseline", "value": "B"})
         baseline_size = registry.size()
 
         original_upsert = Registry.upsert
@@ -153,9 +153,7 @@ class ChaosAgent:
                         severity = "info"
                 except RuntimeError as exc:
                     if registry.size() != baseline_size:
-                        actual = (
-                            f"registry committed a record despite a mid-write crash: {exc!r}"
-                        )
+                        actual = f"registry committed a record despite a mid-write crash: {exc!r}"
                     else:
                         actual = f"registry recovered cleanly from a mid-write crash: {exc!r}"
                         classification = "no_failure_observed"
@@ -164,18 +162,13 @@ class ChaosAgent:
                     if patch_kind == "partial":
                         # The patched upsert succeeded; check that the persisted
                         # record still has its `value`.
-                        good = all(
-                            "value" in rec
-                            for rec in registry.dump().values()
-                        )
+                        good = all("value" in rec for rec in registry.dump().values())
                         if good:
                             actual = "registry preserved required fields after a simulated partial write"
                             classification = "no_failure_observed"
                             severity = "info"
                         else:
-                            actual = (
-                                "registry retained a partially-written record missing `value`"
-                            )
+                            actual = "registry retained a partially-written record missing `value`"
                     else:
                         actual = "patched upsert returned without raising; baseline check pending"
                         classification = "no_failure_observed"

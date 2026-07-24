@@ -53,7 +53,10 @@ class OperatorClient:
         runs_limit: int = 10,
         top_findings_limit: int = 10,
     ) -> dict[str, Any]:
-        params: dict[str, Any] = {"runs_limit": runs_limit, "top_findings_limit": top_findings_limit}
+        params: dict[str, Any] = {
+            "runs_limit": runs_limit,
+            "top_findings_limit": top_findings_limit,
+        }
         if target_repo:
             params["target_repo"] = target_repo
         r = self.http.get("/api/v1/failureforge/operator/morning-report", params=params)

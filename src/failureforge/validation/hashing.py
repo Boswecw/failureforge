@@ -12,7 +12,9 @@ class ReceiptHashMismatch(Exception):
 
 
 def _canonical(payload: Any) -> bytes:
-    return json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
+    return json.dumps(
+        payload, sort_keys=True, separators=(",", ":"), ensure_ascii=False
+    ).encode("utf-8")
 
 
 def compute_receipt_hash(receipt: dict[str, Any]) -> str:

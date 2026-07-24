@@ -10,7 +10,6 @@ from failureforge.runtime.replay import replay_receipt
 from failureforge.runtime.sandbox import AttackOutcome
 from failureforge.validation import apply_receipt_hash
 
-
 _ROOT = Path(__file__).resolve().parents[1]
 
 
@@ -75,9 +74,10 @@ def test_replay_mismatch_writes_failed_run_artifact(monkeypatch, tmp_path: Path)
     assert replay_run["status"] == "failed"
     assert replay_run["receipt_count"] == 0
     assert replay_run["canonical_source_mutated"] is False
-    assert replay_run["canonical_source_hash_before"] == replay_run[
-        "canonical_source_hash_after"
-    ]
+    assert (
+        replay_run["canonical_source_hash_before"]
+        == replay_run["canonical_source_hash_after"]
+    )
     assert (run_dir / "exit_code.txt").read_text(encoding="utf-8") == "2\n"
     assert (run_dir / "stdout.log").read_text(
         encoding="utf-8"

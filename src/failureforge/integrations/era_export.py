@@ -4,9 +4,10 @@ from __future__ import annotations
 
 import hashlib
 import json
-from datetime import datetime, timezone
+from collections.abc import Iterable
+from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any, Iterable
+from typing import Any
 
 from failureforge.validation import validate_failureforge_to_era_export
 
@@ -27,7 +28,7 @@ def _stable_id(prefix: str, *parts: str) -> str:
 
 
 def _utc_now() -> str:
-    return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+    return datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%S.%fZ")
 
 
 def _receipt_ids(receipts: Iterable[dict[str, Any]]) -> list[str]:
@@ -42,14 +43,23 @@ def _lane_summaries(classification: str) -> list[tuple[str, str]]:
             ("efficiency", "Unbounded growth or retry cost risk."),
             ("cross_lane", "Shared invariant failure across ERA dimensions."),
         ]
-    if classification in {"missing_field", "unknown_enum", "bad_path", "bad_unicode", "malformed_input", "state_failure"}:
+    if classification in {
+        "missing_field",
+        "unknown_enum",
+        "bad_path",
+        "bad_unicode",
+        "malformed_input",
+        "state_failure",
+    }:
         return [("accuracy", f"{classification} indicates boundary validation drift.")]
     if classification == "boundary":
         return [("cross_lane", "Boundary failure requires cross-system review.")]
     return [("accuracy", "No failure observed; retain as informational evidence.")]
 
 
-def map_receipt_to_era_candidate(receipt: dict[str, Any], *, lane: str | None = None) -> dict[str, Any]:
+def map_receipt_to_era_candidate(
+    receipt: dict[str, Any], *, lane: str | None = None
+) -> dict[str, Any]:
     """Map one FailureHarvestReceipt into one read-only ERA candidate finding."""
     selected_lane, summary = (
         (lane, f"{receipt['classification']} evidence from FailureForge.")
@@ -160,5 +170,7 @@ def write_era_export(
     out_dir = sandbox_root / "exports" / "era"
     out_dir.mkdir(parents=True, exist_ok=True)
     path = out_dir / f"{export['export_id']}.json"
-    path.write_text(json.dumps(export, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    path.write_text(
+        json.dumps(export, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
     return path

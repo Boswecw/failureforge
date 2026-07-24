@@ -18,12 +18,10 @@ from __future__ import annotations
 
 import hashlib
 import json
-import shutil
 from pathlib import Path
 
 import pytest
 
-from failureforge.agents.edge_case import EdgeCaseAgent
 from failureforge.reporting.scorer import (
     build_hardening_report,
     load_and_verify_receipts,
@@ -34,10 +32,9 @@ from failureforge.runtime.sandbox import SandboxRunner
 from failureforge.validation import (
     validate_failure_case,
     validate_failure_receipt,
-    validate_sandbox_run,
     validate_hardening_report,
+    validate_sandbox_run,
 )
-
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 
@@ -126,7 +123,9 @@ def test_contracts_validate_sample_json():
 # 2 + 9. ---------------------------------------------------- workspace isolation
 
 
-def test_sandbox_workspace_is_a_copy_and_canonical_target_is_unchanged(fresh_sandbox: Path):
+def test_sandbox_workspace_is_a_copy_and_canonical_target_is_unchanged(
+    fresh_sandbox: Path,
+):
     target_source = _REPO_ROOT / "sandbox-targets" / "example-repo"
     canonical_hash_before = _hash_tree(target_source)
 
@@ -192,7 +191,7 @@ def test_hardening_report_has_at_least_one_ranked_finding(fresh_sandbox: Path):
         target_repo_name="example-repo",
         target_repo_source=_REPO_ROOT / "sandbox-targets" / "example-repo",
     )
-    result = runner.run(sandbox_run_id="SR-report")
+    runner.run(sandbox_run_id="SR-report")
     receipts = load_and_verify_receipts(fresh_sandbox / "receipts")
     report = build_hardening_report(
         sandbox_run_id="SR-report",
@@ -200,7 +199,9 @@ def test_hardening_report_has_at_least_one_ranked_finding(fresh_sandbox: Path):
         receipts=receipts,
     )
     assert len(report["ranked_findings"]) >= 1
-    json_path, md_path = write_hardening_artifacts(report=report, sandbox_root=fresh_sandbox)
+    json_path, md_path = write_hardening_artifacts(
+        report=report, sandbox_root=fresh_sandbox
+    )
     assert json_path.is_relative_to(fresh_sandbox / "reports")
     assert md_path.is_relative_to(fresh_sandbox / "reports")
     md = md_path.read_text()

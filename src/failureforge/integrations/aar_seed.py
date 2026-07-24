@@ -4,12 +4,12 @@ from __future__ import annotations
 
 import hashlib
 import json
-from datetime import datetime, timezone
+from collections.abc import Iterable
+from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any, Iterable
+from typing import Any
 
 from failureforge.validation import validate_failureforge_aar_seed
-
 
 _AAR_QUESTIONS = [
     "What invariant failed?",
@@ -31,7 +31,7 @@ def _stable_id(prefix: str, *parts: str) -> str:
 
 
 def _utc_now() -> str:
-    return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+    return datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%S.%fZ")
 
 
 def _deterministic_status(receipts: list[dict[str, Any]]) -> str:
@@ -53,7 +53,9 @@ def build_aar_seed(
     aar_seed_id: str | None = None,
     created_at: str | None = None,
 ) -> dict[str, Any]:
-    receipts_list = [r for r in receipts if r["receipt_id"] in cluster["member_receipts"]]
+    receipts_list = [
+        r for r in receipts if r["receipt_id"] in cluster["member_receipts"]
+    ]
     if not receipts_list:
         raise ValueError("AAR seed requires at least one evidence receipt")
 
@@ -66,7 +68,8 @@ def build_aar_seed(
 
     body = {
         "schema_version": "FailureForgeAARSeed.v1",
-        "aar_seed_id": aar_seed_id or _stable_id("AARS", cluster["cluster_id"], sandbox_run_id),
+        "aar_seed_id": aar_seed_id
+        or _stable_id("AARS", cluster["cluster_id"], sandbox_run_id),
         "target_repo": cluster["target_repo"],
         "source_ref": source_ref,
         "sandbox_run_id": sandbox_run_id,
@@ -77,7 +80,9 @@ def build_aar_seed(
         ),
         "what_failed": cluster.get("root_cause_label") or cluster["classification"],
         "expected_result": first["expected_result"],
-        "actual_result_summary": "; ".join(sorted(cluster["actual_result_distribution"])),
+        "actual_result_summary": "; ".join(
+            sorted(cluster["actual_result_distribution"])
+        ),
         "evidence_receipts": sorted(cluster["member_receipts"]),
         "replay_commands": replay_commands,
         "deterministic_status": _deterministic_status(receipts_list),
