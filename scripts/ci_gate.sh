@@ -39,6 +39,7 @@ run_step() {
 }
 
 run_step dependency_check 2 python3 -c "import jsonschema, httpx, pytest; import failureforge"
+run_step doc_build 1 bash doc/system/BUILD.sh
 run_step pytest 1 python3 -m pytest
 run_step sandbox_run 1 bash scripts/run_sandbox_once.sh example-repo ci-gate
 run_step receipt_verify 3 bash scripts/verify_receipts.sh
@@ -55,7 +56,6 @@ printf "%s\n" "$receipt_path" > "$OUT/replay_receipt_path.txt"
 cp "$receipt_path" "$OUT/replay_receipt.json"
 run_step replay 4 bash scripts/replay_failure.sh "$receipt_path"
 run_step no_canonical_mutation 5 bash scripts/verify_no_canonical_mutation.sh
-run_step doc_build 1 bash doc/system/BUILD.sh
 
 {
   echo "# FailureForge CI Gate Summary"
